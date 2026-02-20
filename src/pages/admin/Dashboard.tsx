@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { supabase } from "../../lib/supabase";
+import '../../../css/Dashboard.css'
 
 const Dashboard = () => {
   useEffect(() => {
@@ -16,9 +17,15 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div>
-      <h1>관리자 대쉬보드</h1>
-      <p>관리자 전용 페이지입니다.</p>
+    <div className="admin-dashboard">
+      <h1 className="admin-title">관리자 페이지</h1>
+
+      <div className="admin-menu">
+        <div className="admin-card">상품 관리</div>
+        <div className="admin-card">회원 관리</div>
+        <div className="admin-card">공지 관리</div>
+        <div className="admin-card">쿠폰 관리</div>
+      </div>
     </div>
   );
 };
