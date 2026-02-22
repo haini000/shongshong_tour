@@ -1,0 +1,48 @@
+@import "/src/components/common.scss";
+
+.common-header {
+  width: 100%;
+  height: 45px; // 이미지에 정의된 높이
+  background-color: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .header-inner {
+    width: 100%;
+    max-width: 375px; // 이미지의 가로 너비 기준
+    padding: 0 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .logo {
+      font-family: 'Cursive', sans-serif; // 이미지의 필기체 느낌
+      font-size: 1.2rem;
+      color: #7c9aff; // 숑숑투어 시그니처 블루
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .user-icon {
+      width: 32px;
+      height: 32px;
+      background-color: #f0f7ff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #7c9aff;
+
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}
