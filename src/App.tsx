@@ -1,10 +1,14 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 // 컴포넌트 
 
 import Header from "./components/user/Header";
 
 /* 사용자 관련 페이지 */
+
+/*
+import Layout from "./layouts/Layout"
+*/
 import Main from "./pages/user/main/Main"
 import Login from "./pages/user/auth/Login";
 import Join from "./pages/user/auth/Join";
@@ -13,24 +17,22 @@ import Cart from "./pages/user/cart/Cart";
 import Checkout from "./pages/user/checkout/Checkout";
 
 /* 관리자 관련 페이지 */
+
+import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
+import List from "./pages/admin/products/List";
 import New from "./pages/admin/products/New";
 import Edit from "./pages/admin/products/Edit";
 
 function App() {
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* 사용자 페이지
-        {/* <Route path="/" element={<Main />}/> */}
-
-        {/* 관리자 페이지 */}
-        {/* <Route path="/admin" element={<Dashboard/>}/>
-        <Route path="/admin/products/new" element={<New/>}/>
-        <Route path="/admin/products/:id/edit" element={<Edit/>}/> */}
-
-        <Route path="*" element={
+    <Routes>
+      {/* 유저 페이지 */}
+      {/* <Route path="/" element={<Layout/>}>
+        <Route index element={<Main/>}/>
+        */}
+      <Route path="*" element={
           <>
             <Header />
             <Routes>
@@ -44,17 +46,14 @@ function App() {
           </>
         } />
 
-        <Route path="/admin/*" element={
-          <>
-            <Routes>
-              <Route path="/admin" element={<Dashboard />} />
-              <Route path="/admin/products/new" element={<New />} />
-              <Route path="/admin/products/:id/edit" element={<Edit />} />
-            </Routes>
-          </>
-        } />
-      </Routes>
-    </BrowserRouter>
+      {/* 관리자 페이지 */}
+      <Route path="/admin" element={<AdminLayout/>}>
+        <Route index element={<Dashboard/>}/>
+        <Route path="products" element={<List/>}/>
+        <Route path="products/new" element={<New/>}/>
+        <Route path="products/:id/edit" element={<Edit/>}/>
+      </Route>
+    </Routes>
   )
 }
 
