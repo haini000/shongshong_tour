@@ -1,8 +1,8 @@
-const Cart = () => {
+const Login= () => {
     return (
         <>
         </>
     )
 };
 
-export default Cart;
+export default Login;

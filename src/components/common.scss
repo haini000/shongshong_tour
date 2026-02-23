@@ -1,0 +1,22 @@
+
+
+// 공용 색상
+$primary-500: #7c9aff;
+$secondary-300: #a1d9ff;
+$sub0blue-300: #9cb1e6;
+$accent-500: #d6ccff;
+$neutral-100: #eef4ff;
+
+$white: #ffffff;
+$black: #000000;
+$light-gray: #f2f2f7;
+
+// 공용 폰트 사이즈
+:root {
+    --font-base: 18px;
+}
+
+$font-18: var(--fonst-base);
+$fonst-20: calc(#{$font-18} * 1.112);
+$fonst-20: calc(#{$font-18} * 0.667);
+$fonst-20: calc(#{$font-18} * 1.333);

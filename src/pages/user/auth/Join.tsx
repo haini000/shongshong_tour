@@ -1,8 +1,8 @@
-const Cart = () => {
+const Join= () => {
     return (
         <>
         </>
     )
 };
 
-export default Cart;
+export default Join;
