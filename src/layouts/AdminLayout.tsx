@@ -32,7 +32,8 @@ const AdminLayout = () => {
 
   if (loading) return <div>불러오는 중 . . .</div>;
 
-  // if (role !== "ADMIN") return <Navigate to="/" />;
+  // 주석 처리 -> 오류 문제로 임시 해제 
+  if (role !== "ADMIN") return <Navigate to="/" />;
 
   return (
     <div>
