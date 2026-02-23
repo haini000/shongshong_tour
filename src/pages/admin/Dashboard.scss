@@ -1,0 +1,72 @@
+.admin-dashboard {
+  padding: 2rem;
+  text-align: center;
+
+  .admin-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    position: relative;
+
+    &::after {
+      content: "";
+      display: block;
+      width: 80px;
+      height: 4px;
+      background-color: #7c3aed; // 보라색 라인
+      margin: 0.5rem auto 0 auto;
+      border-radius: 2px;
+    }
+  }
+
+  .admin-menu {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    justify-items: center;
+
+    .admin-card {
+      background-color: #f9f9fb;
+      width: 140px;
+      height: 140px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        background-color: #f3f0ff; // 살짝 보라 강조
+      }
+
+      // 아이콘 영역
+      .admin-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 0.75rem;
+      }
+
+      .admin-label {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// 반응형
+@media (max-width: 500px) {
+  .admin-dashboard {
+    .admin-menu {
+      grid-template-columns: 1fr;
+    }
+  }
+}

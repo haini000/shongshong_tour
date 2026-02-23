@@ -1,5 +1,16 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase } from "../../../lib/supabase";
 import "./Main.scss";
+
+interface Product {
+  product_number: number;
+  product_name: string;
+  product_price: number;
+  product_desc: string;
+  product_stock: number;
+  travel_date: string;
+}
 
 const Main = () => {
   const navigate = useNavigate();
@@ -13,6 +24,24 @@ const Main = () => {
   ];
 
   const filters = ["전체", "자연/힐링", "호캉스", "액티비티", "제주", "강원", "부산", "전라/경상", "수도권"];
+
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from("Product")
+        .select("*");
+
+      if (error) {
+        console.error("에러:", error);
+      } else {
+        setProducts(data || []);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   return (
     <div className="main-content">
@@ -64,7 +93,7 @@ const Main = () => {
         </div>
 
         {/* 상품 카드 (반복문으로 처리 가능) */}
-        <div className="product-card">
+        {/* <div className="product-card">
           <div className="card-image">
             <img src="https://via.placeholder.com/340x200" alt="product" />
           </div>
@@ -81,8 +110,40 @@ const Main = () => {
               </button>
             </div>
           </div>
-        </div>
-        
+        </div> */}
+        {products.map((product) => (
+          <div key={product.product_number} className="product-card">
+            <div className="card-image">
+              <img src="https://via.placeholder.com/340x200" alt="product" />
+            </div>
+
+            <div className="card-info">
+              <div className="title-row">
+                <h4>{product.product_name}</h4>
+                <span className="price">
+                  {product.product_price.toLocaleString()}원
+                </span>
+              </div>
+
+              <p className="status">
+                {product.product_stock > 0 ? "🟢 예약 가능" : "🔴 마감"}
+              </p>
+
+              <div className="footer-row">
+                <span>출발일: {product.travel_date}</span>
+                <button
+                  className="detail-btn"
+                  onClick={() =>
+                    navigate(`/product/${product.product_number}`)
+                  }
+                >
+                  상세보기
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+
         <button className="more-btn">인기 상품 더보기</button>
       </section>
 

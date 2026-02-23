@@ -32,20 +32,6 @@ function App() {
         <Route path="cart" element={<Cart />}/>
         <Route path="checkout" element={<Checkout />}/>
       </Route>
-       
-      {/* <Route path="*" element={
-          <>
-            <Header />
-            <Routes>
-              <Route path="/" element={<Main />}/>
-              <Route path="/login" element={<Login />}/>
-              <Route path="/join" element={<Join />} />
-              <Route path="/product/:productNumber" element={<Product/>}/>
-              <Route path="/cart" element={<Cart />}/>
-              <Route path="/checkout" element={<Checkout />}></Route>
-            </Routes>
-          </>
-        } /> */}
 
       {/* 관리자 페이지 */}
       <Route path="/admin" element={<AdminLayout/>}>
