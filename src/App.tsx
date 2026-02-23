@@ -7,9 +7,7 @@ import Header from "./components/user/Header";
 
 /* 사용자 관련 페이지 */
 
-/*
 import Layout from "./layouts/Layout"
-*/
 import Main from "./pages/user/main/Main"
 import Login from "./pages/user/auth/Login";
 import Join from "./pages/user/auth/Join";
@@ -30,10 +28,16 @@ function App() {
   return (
     <Routes>
       {/* 유저 페이지 */}
-      {/* <Route path="/" element={<Layout/>}>
+      <Route path="/" element={<Layout/>}>
         <Route index element={<Main/>}/>
-        */}
-      <Route path="*" element={
+        <Route path="login" element={<Login />}/>
+        <Route path="join" element={<Join />} />
+        <Route path="product/:productNumber" element={<Product/>}/>
+        <Route path="cart" element={<Cart />}/>
+        <Route path="checkout" element={<Checkout />}/>
+      </Route>
+       
+      {/* <Route path="*" element={
           <>
             <Header />
             <Routes>
@@ -45,7 +49,7 @@ function App() {
               <Route path="/checkout" element={<Checkout />}></Route>
             </Routes>
           </>
-        } />
+        } /> */}
 
       {/* 관리자 페이지 */}
       <Route path="/admin" element={<AdminLayout/>}>
