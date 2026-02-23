@@ -6,6 +6,11 @@ import Header from "./components/user/Header";
 
 /* 사용자 관련 페이지 */
 import Main from "./pages/user/main/Main"
+import Login from "./pages/user/auth/Login";
+import Join from "./pages/user/auth/Join";
+import Product from "./pages/user/products/Product";
+import Cart from "./pages/user/cart/Cart";
+import Checkout from "./pages/user/checkout/Checkout";
 
 /* 관리자 관련 페이지 */
 import Dashboard from "./pages/admin/Dashboard";
@@ -30,6 +35,11 @@ function App() {
             <Header />
             <Routes>
               <Route path="/" element={<Main />}/>
+              <Route path="/login" element={<Login />}/>
+              <Route path="/join" element={<Join />} />
+              <Route path="/product/:productNumber" element={<Product/>}/>
+              <Route path="/cart" element={<Cart />}/>
+              <Route path="/checkout" element={<Checkout />}></Route>
             </Routes>
           </>
         } />
