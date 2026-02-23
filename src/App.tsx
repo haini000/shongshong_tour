@@ -1,10 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import "./lib/supabase";
 
-// 컴포넌트 
-
-import Header from "./components/user/Header";
-
 /* 사용자 관련 페이지 */
 
 import Layout from "./layouts/Layout"
