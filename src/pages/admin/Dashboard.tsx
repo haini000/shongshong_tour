@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { supabase } from "../../lib/supabase";
-import '../../../css/Dashboard.css'
+import '../../css/Dashboard.css'
 
 const Dashboard = () => {
   useEffect(() => {
