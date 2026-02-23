@@ -1,32 +1,85 @@
-export const dummyProducts = [
-  {id: 1, name: "제주 여행", price: 300000, stock: 10},
-  {id: 2, name: "부산 여행", price: 200000, stock: 5}
-];
+import { useEffect, useState } from "react";
+import { supabase } from "../../../lib/supabase";
+import { useNavigate } from "react-router-dom";
+import "./List.scss"
 
-const List = ()=>{
+interface Product {
+  product_number: number;
+  product_name: string;
+  product_price: number;
+}
+
+const List = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data } = await supabase
+        .from("Product")
+        .select("*");
+
+      setProducts(data || []);
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleDelete = async (id: number) => {
+    const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+
+    const { error } = await supabase
+      .from("Product")
+      .delete()
+      .eq("product_number", id);
+
+    if (error) {
+      alert("삭제 실패");
+      console.error(error);
+    } else {
+      alert("삭제 완료");
+
+      setProducts((prev) =>
+        prev.filter((product) => product.product_number !== id)
+      );
+    }
+  };
+
   return (
-    <div className="list-manage">
-      <div className="list-header">
-        <h1>상품 관리</h1>
-        {/* 뒤로가기 버튼. 아이콘은 나중에 scss로 추가 */}
-        <button className="Material-Icons">expand_less</button>
-        <p>총 {dummyProducts.length}개의 여행 상품</p>
-        <button>상품 추가 +</button>
-      </div>
+    <div>
+      <h2>상품 관리</h2>
 
-      <div className="search">
-        <span className="Material Icons">search</span>
-        <input type="text" placeholder="상품 검색"/>
-      </div>
+      <button onClick={() => navigate("/admin/products/new")}>
+        + 상품 등록
+      </button>
+      <div className="admin-product-list">
+        {products.map((product) => (
+          <div
+            key={product.product_number}
+            className="admin-product-card"
+          >
+            <img
+              src="https://via.placeholder.com/300x200"
+              alt={product.product_name}
+            />
 
-      <div className="lists">
-        {dummyProducts.map((product) =>(
-          <div key={product.id} className="list-item">
-            <div>{product.name}</div>
-            <div>{product.price.toLocaleString()}원</div>
-            <div>{product.stock}</div>
-            <button>수정</button>
-            <button>삭제</button>
+            <div className="card-content">
+              <h3>{product.product_name}</h3>
+              <p className="price">
+                {product.product_price.toLocaleString()}원
+              </p>
+
+              <div className="card-actions">
+                <button
+                  onClick={() =>
+                    navigate(`/admin/products/${product.product_number}/edit`)
+                  }>✏️</button>
+                <button
+                  onClick={() => handleDelete(product.product_number)
+                  }>🗑️</button>
+              </div>
+            </div>
           </div>
         ))}
       </div>

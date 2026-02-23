@@ -1,29 +1,33 @@
-import { useEffect } from "react";
-import { supabase } from "../../lib/supabase";
+import { useNavigate } from "react-router-dom";
+import "./Dashboard.scss";
 
 const Dashboard = () => {
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const { data, error } = await supabase
-        .from("Product")
-        .select("*");
-
-      console.log("상품 데이터:", data);
-      console.log("에러:", error);
-    };
-
-    fetchProducts();
-  }, []);
+  const navigate = useNavigate();
 
   return (
     <div className="admin-dashboard">
       <h1 className="admin-title">관리자 페이지</h1>
 
       <div className="admin-menu">
-        <div className="admin-card">상품 관리</div>
-        <div className="admin-card">회원 관리</div>
-        <div className="admin-card">공지 관리</div>
-        <div className="admin-card">쿠폰 관리</div>
+        <div className="admin-card" onClick={() => navigate("/admin/products")}>
+          <img src="/icons/product.png" alt="상품 관리" className="admin-icon" />
+          <span className="admin-label">상품 관리</span>
+        </div>
+
+        <div className="admin-card">
+          <img src="/icons/users.png" alt="회원 관리" className="admin-icon" />
+          <span className="admin-label">회원 관리</span>
+        </div>
+
+        <div className="admin-card">
+          <img src="/icons/notice.png" alt="공지 관리" className="admin-icon" />
+          <span className="admin-label">공지 관리</span>
+        </div>
+
+        <div className="admin-card">
+          <img src="/icons/coupon.png" alt="쿠폰 관리" className="admin-icon" />
+          <span className="admin-label">쿠폰 관리</span>
+        </div>
       </div>
     </div>
   );
