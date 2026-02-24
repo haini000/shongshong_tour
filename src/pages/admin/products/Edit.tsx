@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../../lib/supabase";
+import "./Edit.scss";
 
 const Edit = () => {
   const { id } = useParams<{ id: string }>();
@@ -12,7 +13,16 @@ const Edit = () => {
   const [stock, setStock] = useState(0);
   const [date, setDate] = useState("");
 
-  // 🔹 기존 데이터 불러오기
+  const [categories, setCategories] = useState<any[]>([]);
+
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  const [newImage, setNewImage] = useState<File | null>(null);
+
+  const [preview, setPreview] = useState<string | null>(null);
+
   useEffect(() => {
     if (!id) return;
 
@@ -29,21 +39,64 @@ const Edit = () => {
         setDesc(data.product_desc);
         setStock(data.product_stock);
         setDate(data.travel_date);
+        setImageUrl(data.product_image);
       }
 
       if (error) {
         console.error(error);
+      }
+
+      const { data: mapData } = await supabase
+        .from("Product_Map")
+        .select("category_id")
+        .eq("product_number", Number(id));
+
+      if (mapData) {
+        setSelectedCategories(mapData.map(item => item.category_id));
       }
     };
 
     fetchProduct();
   }, [id]);
 
-  // 🔹 수정 제출
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const { data, error } = await supabase
+        .from("Category")
+        .select("*");
+
+      if (data) setCategories(data);
+      if (error) console.error(error);
+    };
+
+    fetchCategories();
+  }, []);
+
   const handleUpdate = async (e: React.FormEvent) => {
     if (!id) return;
 
     e.preventDefault();
+
+    let finalImageUrl = imageUrl;
+
+    if (newImage) {
+      const fileName = `${Date.now()}-${newImage.name}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("product-images")
+        .upload(fileName, newImage);
+
+      if (uploadError) {
+        alert("이미지 업로드 실패");
+        return;
+      }
+
+      const { data } = supabase.storage
+        .from("product-images")
+        .getPublicUrl(fileName);
+
+      finalImageUrl = data.publicUrl;
+    }
 
     const { error } = await supabase
       .from("Product")
@@ -53,47 +106,155 @@ const Edit = () => {
         product_desc: desc,
         product_stock: stock,
         travel_date: date,
+        product_image: finalImageUrl,
       })
       .eq("product_number", Number(id))
 
     if (error) {
       alert("수정 실패");
-    } else {
-      alert("수정 완료");
-      navigate("/admin/products");
+      return;
     }
-  };
+
+    await supabase
+      .from("Product_Map")
+      .delete()
+      .eq("product_number", Number(id));
+
+    const newMap = selectedCategories.map((catId) => ({
+      product_number: Number(id),
+      category_id: catId,
+    }));
+
+    if (newMap.length > 0) {
+      await supabase
+        .from("Product_Map")
+        .insert(newMap);
+    }
+
+    alert("수정 완료");
+    navigate("/admin/products");
+  }
+
 
   return (
     <div className="product-edit">
-      <h1>상품 수정</h1>
+      <div className="edit-container">
+        <h1>상품 수정</h1>
 
-      <form onSubmit={handleUpdate}>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <form onSubmit={handleUpdate}>
 
-        <input
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(Number(e.target.value))}
-        />
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt="현재 이미지"
+              className="edit-preview"
+            />
+          )}
 
-        <input
-          type="number"
-          value={stock}
-          onChange={(e) => setStock(Number(e.target.value))}
-        />
+          <div className="image-edit-box">
+            <input
+              type="file"
+              accept="image/png, image/jpeg"
+              onChange={(e) => {
+                if (e.target.files) {
+                  const file = e.target.files[0];
+                  setNewImage(file);
+                  setPreview(URL.createObjectURL(file));
+                }
+              }}
+            />
 
-        <textarea
-          value={desc}
-          onChange={(e) => setDesc(e.target.value)}
-        />
+            {preview && (
+              <img
+                src={preview}
+                alt="새 이미지 미리보기"
+                className="edit-preview"
+              />
+            )}
+          </div>
 
-        <button type="submit">수정 완료</button>
-      </form>
+          <div className="form-group">
+            <label htmlFor="name">상품명</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-title">카테고리</label>
+
+            <div className="category-box">
+              {categories.map((cat) => (
+                <label
+                  key={cat.category_id}
+                  className={`category-item ${selectedCategories.includes(cat.category_id) ? "active" : ""
+                    }`}
+                >
+                  <input
+                    type="checkbox"
+                    value={cat.category_id}
+                    checked={selectedCategories.includes(cat.category_id)}
+                    onChange={(e) => {
+                      const id = Number(e.target.value);
+
+                      if (e.target.checked) {
+                        setSelectedCategories([...selectedCategories, id]);
+                      } else {
+                        setSelectedCategories(
+                          selectedCategories.filter((c) => c !== id)
+                        );
+                      }
+                    }}
+                  />
+                  {cat.category_name}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="name">판매 가격</label>
+            <input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(Number(e.target.value))}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="name">기간</label>
+            <input
+              type="number"
+              value={stock}
+              onChange={(e) => setStock(Number(e.target.value))}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="name">상품 요약 설명</label>
+            <textarea
+              value={desc}
+              onChange={(e) => setDesc(e.target.value)}
+            />
+          </div>
+
+          <div className="button-group">
+            <button
+              type="button"
+              className="cancel-btn"
+              onClick={() => navigate(-1)}
+            >
+              취소
+            </button>
+
+            <button type="submit" className="submit-btn">
+              수정 완료
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
