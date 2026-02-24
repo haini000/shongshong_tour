@@ -1,6 +1,10 @@
 .admin-dashboard {
-  padding: 2rem;
+  padding: 2rem 24px 2rem 24px;
   text-align: center;
+  width: 100%;
+  max-width: 375px;
+  margin: 0 auto;
+  background:#F2F2F7;
 
   .admin-title {
     font-size: 2rem;
@@ -13,7 +17,7 @@
       display: block;
       width: 80px;
       height: 4px;
-      background-color: #7c3aed; // 보라색 라인
+      background-color: #7c3aed;
       margin: 0.5rem auto 0 auto;
       border-radius: 2px;
     }
@@ -22,13 +26,14 @@
   .admin-menu {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
+    row-gap: 0.5rem;
     justify-items: center;
+    padding-bottom: 80px;
 
     .admin-card {
-      background-color: #f9f9fb;
-      width: 140px;
-      height: 140px;
+      background-color: #ffffff;
+      width: 180px;
+      height: 160px;
       border-radius: 16px;
       display: flex;
       flex-direction: column;
@@ -44,7 +49,7 @@
       &:hover {
         transform: translateY(-4px);
         box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        background-color: #f3f0ff; // 살짝 보라 강조
+        background-color: #f3f0ff;
       }
 
       // 아이콘 영역
@@ -58,15 +63,6 @@
         font-size: 1rem;
         font-weight: 500;
       }
-    }
-  }
-}
-
-// 반응형
-@media (max-width: 500px) {
-  .admin-dashboard {
-    .admin-menu {
-      grid-template-columns: 1fr;
     }
   }
 }

@@ -7,6 +7,7 @@ interface Product {
   product_number: number;
   product_name: string;
   product_price: number;
+  product_image: string | null;
 }
 
 const List = () => {
@@ -60,9 +61,10 @@ const List = () => {
             className="admin-product-card"
           >
             <img
-              src="https://via.placeholder.com/300x200"
-              alt={product.product_name}
-            />
+                src={product.product_image || "/default.jpg"}
+                alt={product.product_name}
+                className="product-image"
+              />
 
             <div className="card-content">
               <h3>{product.product_name}</h3>

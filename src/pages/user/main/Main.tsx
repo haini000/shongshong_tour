@@ -10,6 +10,7 @@ interface Product {
   product_desc: string;
   product_stock: number;
   travel_date: string;
+  product_image: string | null;
 }
 
 const Main = () => {
@@ -114,7 +115,11 @@ const Main = () => {
         {products.map((product) => (
           <div key={product.product_number} className="product-card">
             <div className="card-image">
-              <img src="https://via.placeholder.com/340x200" alt="product" />
+              <img
+                src={product.product_image || "/default.jpg"}
+                alt={product.product_name}
+                className="product-image"
+              />
             </div>
 
             <div className="card-info">

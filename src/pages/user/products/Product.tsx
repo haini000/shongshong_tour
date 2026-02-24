@@ -38,7 +38,7 @@ const Products = () => {
   if (!product) return <div>로딩중...</div>;
 
   return (
-    <div>
+    <div className="main-content">
       <h1>{product.product_name}</h1>
       <p>{product.product_price}원</p>
       <p>{product.product_desc}</p>
