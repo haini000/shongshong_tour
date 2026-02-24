@@ -1,0 +1,57 @@
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 375px; // 요청하신 사이즈
+  height: 68px;     // 요청하신 사이즈
+  background-color: #ffffff;
+  border-top: 1px solid #f0f0f0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+
+  .nav-list {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    .nav-item {
+      flex: 1;
+
+      a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: #b0b0b0; // 비활성화 색상 (회색)
+        transition: color 0.2s ease;
+
+        .nav-icon {
+          width: 24px;
+          height: 24px;
+          margin-bottom: 4px;
+        }
+
+        span {
+          font-size: 11px;
+          font-weight: 500;
+        }
+
+        // 활성화(클릭됨) 상태일 때
+        &.active {
+          color: #8a2be2; // 보라색 포인트
+          
+          .nav-icon {
+            stroke: #8a2be2;
+          }
+        }
+      }
+    }
+  }
+}
