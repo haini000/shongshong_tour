@@ -18,8 +18,21 @@ $light-gray: #f2f2f7;
     --font-base: 18px;
 }
 
-$font-18: var(--fonst-base);
-$fonst-20: calc(#{$font-18} * 1.112);
-$fonst-20: calc(#{$font-18} * 0.667);
-$fonst-20: calc(#{$font-18} * 1.333);
+$font-18: var(--font-base);
+$font-20: calc(#{$font-18} * 1.112);
+$font-12: calc(#{$font-18} * 0.667);
+$font-24: calc(#{$font-18} * 1.333);
 
+// 공용 폰트 패밀리
+$font-primary: 'Playwrite NZ Basic', sans-serif;
+$font-secondary: 'Quicksand', sans-serif;
+$font-admin: 'Noto Sans KR', sans-serif;
+
+.main-content {
+    width: 100%;
+    max-width: 375px;
+    margin: 0 auto;
+    background-color: $neutral-100;
+    padding: 16px;
+    position: relative;
+}
