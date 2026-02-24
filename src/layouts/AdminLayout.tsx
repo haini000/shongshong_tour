@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
-import { Link, Outlet, Navigate } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
+import Footer from "../components/admin/footer/footer";
+import "./AdminLayout.scss"
 
 const AdminLayout = () => {
   const [role, setRole] = useState<string | null>(null);
@@ -55,14 +57,7 @@ const AdminLayout = () => {
       <main className="admin_content">
         <Outlet />
       </main>
-
-      <nav className="admin_bottom">
-        <Link to="/admin">대시보드</Link>
-        <Link to="/admin/products">상품관리</Link>
-        {/* <Link to="/admin/customer">회원관리</Link>
-          <Link to="/admin/notification">공지관리</Link>
-          <Link to="/admin/coupon">쿠폰관리</Link> */}      
-        </nav>
+      <Footer/>
     </div>
   );
 };
