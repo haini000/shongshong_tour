@@ -1,3 +1,5 @@
+@use "../../components/common.scss" as *;
+
 .admin-dashboard {
   text-align: center;
   width: 100%;
@@ -7,8 +9,10 @@
 
   .admin-title {
     padding: 2rem 24px 0 24px;
-    font-size: 2rem;
-    font-weight: 600;
+    font-size: $font-24;
+    font-weight: 700;
+    font-family: $font-admin;
+    line-height: 1;
     margin-top: 0;
     margin-bottom: 2rem;
     position: relative;
@@ -73,8 +77,10 @@
       }
 
       .admin-label {
-        font-size: 1rem;
-        font-weight: 500;
+        font-size: 16px;
+        font-weight: 700;
+        font-family: $font-admin;
+        line-height: 1;
       }
 
       &.admin-card-products p.material-icons {
