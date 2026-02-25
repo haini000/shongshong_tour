@@ -16,6 +16,8 @@ const List = () => {
   const ITEMS_PER_PAGE = 20;
   const [products, setProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [showScrollTopBtn, setShowScrollTopBtn] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,15 +29,42 @@ const List = () => {
     fetchProducts();
   }, []);
 
-  const totalPages = Math.max(1, Math.ceil(products.length / ITEMS_PER_PAGE));
+  const filteredProducts = products.filter((product) => {
+    const description = product.product_desc || product.product_description || "";
+    const keyword = searchKeyword.trim().toLowerCase();
+
+    if (!keyword) return true;
+
+    return (
+      product.product_name.toLowerCase().includes(keyword) ||
+      description.toLowerCase().includes(keyword)
+    );
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedProducts = products.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const paginatedProducts = filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchKeyword]);
 
   useEffect(() => {
     if (currentPage > totalPages) {
       setCurrentPage(totalPages);
     }
   }, [currentPage, totalPages]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTopBtn(window.scrollY > 200);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const getVisiblePages = () => {
     if (totalPages <= 5) {
@@ -74,13 +103,49 @@ const List = () => {
     );
   };
 
-  return (
-    <div>
-      <h2>상품 관리</h2>
+  const handleScrollTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-      <button onClick={() => navigate("/admin/products/new")}>
-        + 상품 등록
-      </button>
+  return (
+    <div className="admin-product-page">
+      <div className="list-top">
+        <div className="list-title-group">
+          <button
+            type="button"
+            className="list-back-btn"
+            onClick={() => navigate(-1)}
+            aria-label="뒤로가기"
+          >
+            <span className="material-icons">chevron_left</span>
+          </button>
+
+          <div>
+            <h2>상품 관리</h2>
+            <p className="list-count">
+              총 <strong>{filteredProducts.length}</strong>개의 여행 상품
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className="list-add-btn"
+          onClick={() => navigate("/admin/products/new")}
+        >
+          상품 추가 <span className="material-icons">add</span>
+        </button>
+      </div>
+
+      <label className="list-search">
+        <span className="material-icons">search</span>
+        <input
+          type="text"
+          placeholder="상품 검색"
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value)}
+        />
+      </label>
 
       <div className="admin-product-list">
         {paginatedProducts.map((product) => (
@@ -173,6 +238,17 @@ const List = () => {
           )}
         </div>
       </div>
+
+      {showScrollTopBtn && (
+        <button
+          type="button"
+          className="scroll-top-btn"
+          onClick={handleScrollTop}
+          aria-label="맨 위로 이동"
+        >
+          <span className="material-icons">expand_less</span>
+        </button>
+      )}
     </div>
   );
 };
