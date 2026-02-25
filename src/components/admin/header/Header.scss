@@ -1,3 +1,5 @@
+@use "../../common.scss" as *;
+
 .admin_header {
   text-align: center;
   background: #ffffff;
@@ -11,4 +13,10 @@
     color: #4aabf7;
     cursor: pointer;
   }
+}
+.logo-tt {
+  font-family: $font-primary;
+  font-size: $font-12;
+  font-weight: 400;
+  line-height: 1;
 }
