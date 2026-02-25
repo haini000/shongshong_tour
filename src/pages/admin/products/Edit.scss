@@ -58,12 +58,9 @@
   }
 
   .row {
-    display: flex;
+    display: grid;
+    grid-template-columns: 152px 2fr;
     gap: 12px;
-
-    input {
-      flex: 1;
-    }
   }
 
   .category-box {

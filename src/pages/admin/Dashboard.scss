@@ -2,13 +2,14 @@
   text-align: center;
   width: 100%;
   max-width: 375px;
-  margin: 0 auto;
+  height: 100%;
   background:#F2F2F7;
 
   .admin-title {
     padding: 2rem 24px 0 24px;
     font-size: 2rem;
     font-weight: 600;
+    margin-top: 0;
     margin-bottom: 2rem;
     position: relative;
 
