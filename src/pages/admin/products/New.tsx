@@ -130,7 +130,7 @@ const New = () => {
       alert("등록 실패");
       return;
     }
-    const productId = productData[0].product_id;
+    const productNumber = productData[0].product_id;
 
     if (!categoryId) {
       alert("카테고리를 선택해주세요.");
@@ -141,7 +141,7 @@ const New = () => {
       .from("Product_Map")
       .insert([
         {
-          product_id: productId,
+          product_id: productNumber,
           category_id: categoryId,
         },
       ]);

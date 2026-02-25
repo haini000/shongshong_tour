@@ -2,6 +2,11 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding: 2rem 24px 2rem 24px;
+  width: 100%;
+  max-width: 375px;
+  margin: 0 auto;
+  background:#F2F2F7;
 }
 
 .admin-product-card {
