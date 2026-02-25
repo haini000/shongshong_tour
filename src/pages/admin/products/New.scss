@@ -113,7 +113,6 @@
     cursor: pointer;
   }
 
-  /* 카테고리 그룹 */
   .category-group {
     display: flex;
     flex-wrap: wrap;
@@ -121,7 +120,6 @@
     margin-top: 10px;
   }
 
-  /* 기본 버튼 스타일 */
   .category-group button {
     padding: 10px 18px;
     border-radius: 999px;
@@ -132,13 +130,11 @@
     transition: all 0.2s ease;
   }
 
-  /* hover 효과 */
   .category-group button:hover {
     border-color: #3B82F6;
     color: #3B82F6;
   }
 
-  /* 선택된 상태 */
   .category-group button.active {
     background-color: #3B82F6;
     color: #fff;
@@ -147,7 +143,6 @@
     box-shadow: 0 4px 10px rgba(63, 81, 181, 0.2);
   }
 
-  /* 눌렀을 때 살짝 눌리는 느낌 */
   .category-group button:active {
     transform: scale(0.97);
   }
