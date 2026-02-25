@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../../lib/supabase";
 import "./Edit.scss";
@@ -139,7 +139,8 @@ const Edit = () => {
   return (
     <div className="product-edit">
       <div className="edit-container">
-        <h1>상품 수정</h1>
+        <h1>상품 정보 수정</h1>
+        <p>등록된 기존 정보를 확인하고 수정해주세요.</p>
 
         <form onSubmit={handleUpdate}>
 
@@ -214,22 +215,27 @@ const Edit = () => {
             </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="name">판매 가격</label>
-            <input
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(Number(e.target.value))}
-            />
-          </div>
+          <div className="row">
+            <div className="form-group">
+              <label htmlFor="price">판매 가격</label>
+              <input
+                id="price"
+                type="number"
+                min="1"
+                value={price}
+                onChange={(e) => setPrice(Number(e.target.value))}
+              />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="name">기간</label>
-            <input
-              type="number"
-              value={stock}
-              onChange={(e) => setStock(Number(e.target.value))}
-            />
+            <div className="form-group">
+              <label htmlFor="date">기간</label>
+              <input
+                id="date"
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
+            </div>
           </div>
 
           <div className="form-group">
@@ -237,6 +243,17 @@ const Edit = () => {
             <textarea
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="stock">재고 수량</label>
+            <input
+              id="stock"
+              type="number"
+              min="1"
+              value={stock}
+              onChange={(e) => setStock(Number(e.target.value))}
             />
           </div>
 

@@ -1,45 +1,28 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../../../lib/supabase";
+﻿import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../../../lib/supabase";
 import "./New.scss";
+
+type Category = {
+  category_id: number;
+  category_name: string;
+};
 
 const New = () => {
   const navigate = useNavigate();
-
-  type Category = {
-    category_id: number;
-    category_name: string;
-  };
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [desc, setDesc] = useState("");
   const [stock, setStock] = useState(0);
   const [date, setDate] = useState("");
-
   const [categories, setCategories] = useState<Category[]>([]);
-
   const [categoryId, setCategoryId] = useState<number | null>(null);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const { data, error } = await supabase
-        .from("Category")
-        .select("category_id, category_name");
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      setCategories(data || []);
-    };
-
-    fetchCategories();
-  }, []);
-
+  const [isCategoryFormOpen, setIsCategoryFormOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [categoryError, setCategoryError] = useState("");
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [image, setImage] = useState<File | null>(null);
-
   const [preview, setPreview] = useState<string | null>(null);
 
   const [errors, setErrors] = useState({
@@ -47,8 +30,65 @@ const New = () => {
     price: "",
     date: "",
     desc: "",
-    stock: ""
+    stock: "",
   });
+
+  const fetchCategories = async () => {
+    const { data, error } = await supabase
+      .from("Category")
+      .select("category_id, category_name");
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    setCategories(data || []);
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const handleAddCategory = async () => {
+    const trimmedName = newCategoryName.trim();
+
+    if (!trimmedName) {
+      setCategoryError("카테고리 이름을 입력해주세요.");
+      return;
+    }
+
+    const duplicated = categories.some(
+      (item) => item.category_name.trim().toLowerCase() === trimmedName.toLowerCase()
+    );
+
+    if (duplicated) {
+      setCategoryError("이미 존재하는 카테고리입니다.");
+      return;
+    }
+
+    setCategoryError("");
+    setIsAddingCategory(true);
+
+    const { data, error } = await supabase
+      .from("Category")
+      .insert([{ category_name: trimmedName }])
+      .select("category_id, category_name")
+      .single();
+
+    setIsAddingCategory(false);
+
+    if (error || !data) {
+      console.error(error);
+      setCategoryError("카테고리 추가에 실패했습니다.");
+      return;
+    }
+
+    setCategories((prev) => [...prev, data]);
+    setCategoryId(data.category_id);
+    setNewCategoryName("");
+    setIsCategoryFormOpen(false);
+  };
 
   const validate = () => {
     const newErrors = {
@@ -56,7 +96,7 @@ const New = () => {
       price: "",
       date: "",
       desc: "",
-      stock: ""
+      stock: "",
     };
 
     if (!name.trim()) {
@@ -80,13 +120,11 @@ const New = () => {
     }
 
     setErrors(newErrors);
-
     return !Object.values(newErrors).some((error) => error !== "");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validate()) return;
 
     let imageUrl = "";
@@ -95,8 +133,8 @@ const New = () => {
       const fileName = `${Date.now()}-${image.name}`;
 
       const { error: uploadError } = await supabase.storage
-        .from("product-images")
-        .upload(fileName, image);
+      .from("product-images")
+      .upload(fileName, image);
 
       if (uploadError) {
         console.error(uploadError);
@@ -105,9 +143,8 @@ const New = () => {
       }
 
       const { data } = supabase.storage
-        .from("product-images")
-        .getPublicUrl(fileName);
-
+      .from("product-images")
+      .getPublicUrl(fileName);
       imageUrl = data.publicUrl;
     }
 
@@ -130,7 +167,13 @@ const New = () => {
       alert("등록 실패");
       return;
     }
-    const productNumber = productData[0].product_id;
+
+    if (!productData || productData.length === 0) {
+      alert("상품 생성 실패");
+      return;
+    }
+    
+    const productNumber = productData[0].product_number;
 
     if (!categoryId) {
       alert("카테고리를 선택해주세요.");
@@ -140,8 +183,8 @@ const New = () => {
     const { error: mapError } = await supabase
       .from("Product_Map")
       .insert([
-        {
-          product_id: productNumber,
+        { 
+          product_number: productNumber, 
           category_id: categoryId,
         },
       ]);
@@ -154,29 +197,28 @@ const New = () => {
 
     alert("등록 완료");
     navigate("/admin/products");
-  }
+  };
 
   return (
     <div className="product-create">
       <div className="page-header">
-        <button
-          type="button"
-          className="back-btn"
+        <button 
+          type="button" 
+          className="back-btn" 
           onClick={() => navigate(-1)}
-        >
-          ←
+          >
+          <span className="material-icons">chevron_left</span>
         </button>
 
         <div>
           <h1 className="title">새로운 여행 상품 등록</h1>
           <p className="subtitle">
             관리자님, 숑숑투어의 새로운 모델을 추가해주세요.
-          </p>
+            </p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit}>
-        {/* 대표 이미지 */}
         <div className="form-group image-group image-upload-box">
           <input
             type="file"
@@ -191,17 +233,16 @@ const New = () => {
           />
 
           {preview ? (
-            <img src={preview} className="image-preview" />
+            <img src={preview} className="image-preview" alt="미리보기" />
           ) : (
             <div className="image-placeholder">
-              📷
+              <span className="material-icons">add_a_photo</span>
               <p>이미지 업로드</p>
               <small>PNG, JPG (최대 10MB)</small>
             </div>
           )}
         </div>
 
-        {/* 상품명 */}
         <div className="form-group">
           <label>상품명</label>
           <input
@@ -213,9 +254,51 @@ const New = () => {
           {errors.name && <p className="error">{errors.name}</p>}
         </div>
 
-        {/* 카테고리 */}
         <div className="form-group">
-          <label>카테고리</label>
+          <div className="category-label-row">
+            <label>카테고리</label>
+            <button
+              type="button"
+              className="category-add-toggle-btn"
+              onClick={() => {
+                setIsCategoryFormOpen((prev) => !prev);
+                setCategoryError("");
+              }}
+            >
+              + 카테고리 추가
+            </button>
+          </div>
+
+          {isCategoryFormOpen && (
+            <div className="category-create-row">
+              <input
+                type="text"
+                placeholder="새 카테고리 이름"
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+              />
+              <button
+                type="button"
+                className="category-create-btn"
+                onClick={handleAddCategory}
+                disabled={isAddingCategory}
+              >
+                {isAddingCategory ? "추가 중..." : "추가"}
+              </button>
+              <button
+                type="button"
+                className="category-cancel-btn"
+                onClick={() => {
+                  setIsCategoryFormOpen(false);
+                  setNewCategoryName("");
+                  setCategoryError("");
+                }}
+              >
+                취소
+              </button>
+            </div>
+          )}
+          {categoryError && <p className="error">{categoryError}</p>}
 
           <div className="category-group">
             {categories.map((item) => (
@@ -233,31 +316,29 @@ const New = () => {
           </div>
         </div>
 
-        {/* 가격 + 기간 */}
         <div className="row">
           <div className="form-group">
             <label>상품 가격 (원)</label>
-            <input
-              type="number"
-              min="1"
-              value={price}
-              onChange={(e) => setPrice(Number(e.target.value))}
-            />
+            <input 
+              type="number" 
+              min="1" 
+              value={price} 
+              onChange={(e) => setPrice(Number(e.target.value))} 
+              />
             {errors.price && <p className="error">{errors.price}</p>}
           </div>
 
           <div className="form-group">
             <label>여행 기간</label>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
+            <input 
+              type="date" 
+              value={date} 
+              onChange={(e) => setDate(e.target.value)} 
+              />
             {errors.date && <p className="error">{errors.date}</p>}
           </div>
         </div>
 
-        {/* 상세 설명 */}
         <div className="form-group">
           <label>상세 설명</label>
           <textarea
@@ -268,20 +349,19 @@ const New = () => {
           {errors.desc && <p className="error">{errors.desc}</p>}
         </div>
 
-        {/* 재고 */}
         <div className="form-group">
           <label>재고 수량</label>
-          <input
-            type="number"
-            min="1"
-            value={stock}
-            onChange={(e) => setStock(Number(e.target.value))}
-          />
+          <input 
+            type="number" 
+            min="1" 
+            value={stock} 
+            onChange={(e) => setStock(Number(e.target.value))} 
+            />
           {errors.stock && <p className="error">{errors.stock}</p>}
         </div>
 
         <button type="submit" className="submit-btn">
-          상품 등록 완료하기 +
+          상품 등록 완료하기 <span className="material-icons">add_circle</span>
         </button>
       </form>
     </div>
