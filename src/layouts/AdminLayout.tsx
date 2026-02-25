@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from "react";
 import { Outlet, Navigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import Header from "../components/admin/header/Header";
 import Footer from "../components/admin/footer/Footer";
 import "./AdminLayout.scss";
 
@@ -47,10 +48,7 @@ const AdminLayout = () => {
 
   return (
     <div className="admin">
-      <header className="admin_header">
-        <h1>Shong Shong Tour</h1>
-      </header>
-
+      <Header/>
       <main className="admin_content">
         <Outlet />
       </main>
