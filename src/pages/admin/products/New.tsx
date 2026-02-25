@@ -18,6 +18,10 @@ const New = () => {
   const [date, setDate] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoryId, setCategoryId] = useState<number | null>(null);
+  const [isCategoryFormOpen, setIsCategoryFormOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [categoryError, setCategoryError] = useState("");
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -29,22 +33,62 @@ const New = () => {
     stock: "",
   });
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const { data, error } = await supabase
+  const fetchCategories = async () => {
+    const { data, error } = await supabase
       .from("Category")
       .select("category_id, category_name");
 
-      if (error) {
-        console.error(error);
-        return;
-      }
+    if (error) {
+      console.error(error);
+      return;
+    }
 
-      setCategories(data || []);
-    };
+    setCategories(data || []);
+  };
 
+  useEffect(() => {
     fetchCategories();
   }, []);
+
+  const handleAddCategory = async () => {
+    const trimmedName = newCategoryName.trim();
+
+    if (!trimmedName) {
+      setCategoryError("카테고리 이름을 입력해주세요.");
+      return;
+    }
+
+    const duplicated = categories.some(
+      (item) => item.category_name.trim().toLowerCase() === trimmedName.toLowerCase()
+    );
+
+    if (duplicated) {
+      setCategoryError("이미 존재하는 카테고리입니다.");
+      return;
+    }
+
+    setCategoryError("");
+    setIsAddingCategory(true);
+
+    const { data, error } = await supabase
+      .from("Category")
+      .insert([{ category_name: trimmedName }])
+      .select("category_id, category_name")
+      .single();
+
+    setIsAddingCategory(false);
+
+    if (error || !data) {
+      console.error(error);
+      setCategoryError("카테고리 추가에 실패했습니다.");
+      return;
+    }
+
+    setCategories((prev) => [...prev, data]);
+    setCategoryId(data.category_id);
+    setNewCategoryName("");
+    setIsCategoryFormOpen(false);
+  };
 
   const validate = () => {
     const newErrors = {
@@ -158,7 +202,7 @@ const New = () => {
           className="back-btn" 
           onClick={() => navigate(-1)}
           >
-          ←
+          <span className="material-icons">chevron_left</span>
         </button>
 
         <div>
@@ -206,7 +250,50 @@ const New = () => {
         </div>
 
         <div className="form-group">
-          <label>카테고리</label>
+          <div className="category-label-row">
+            <label>카테고리</label>
+            <button
+              type="button"
+              className="category-add-toggle-btn"
+              onClick={() => {
+                setIsCategoryFormOpen((prev) => !prev);
+                setCategoryError("");
+              }}
+            >
+              + 카테고리 추가
+            </button>
+          </div>
+
+          {isCategoryFormOpen && (
+            <div className="category-create-row">
+              <input
+                type="text"
+                placeholder="새 카테고리 이름"
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+              />
+              <button
+                type="button"
+                className="category-create-btn"
+                onClick={handleAddCategory}
+                disabled={isAddingCategory}
+              >
+                {isAddingCategory ? "추가 중..." : "추가"}
+              </button>
+              <button
+                type="button"
+                className="category-cancel-btn"
+                onClick={() => {
+                  setIsCategoryFormOpen(false);
+                  setNewCategoryName("");
+                  setCategoryError("");
+                }}
+              >
+                취소
+              </button>
+            </div>
+          )}
+          {categoryError && <p className="error">{categoryError}</p>}
 
           <div className="category-group">
             {categories.map((item) => (
@@ -269,7 +356,7 @@ const New = () => {
         </div>
 
         <button type="submit" className="submit-btn">
-          상품 등록 완료하기 +
+          상품 등록 완료하기 <span className="material-icons">add_circle</span>
         </button>
       </form>
     </div>

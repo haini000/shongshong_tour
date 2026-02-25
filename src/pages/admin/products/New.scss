@@ -1,12 +1,15 @@
 .product-create {
   width: 100%;
   max-width: 375px;
+  height: 100%;
   margin: 0 auto;
   background: #F2F2F7;
+  margin-bottom: 1.5rem;
 
   .title {
     font-size: 20px;
     font-weight: bold;
+    margin: 0;
   }
 
   form {
@@ -16,7 +19,7 @@
   .subtitle {
     font-size: 14px;
     color: #666;
-    margin-bottom: 20px;
+    margin: 4px 0 0;
   }
 
   .form-group {
@@ -62,6 +65,10 @@
     color: white;
     font-weight: bold;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
 
   .error {
@@ -102,15 +109,25 @@
   .page-header {
     padding: 24px;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 12px;
   }
 
   .back-btn {
-    background: none;
+    width: 40px;
+    height: 40px;
     border: none;
-    font-size: 22px;
+    border-radius: 50%;
+    background: #3b82f6;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+
+    .material-icons {
+      font-size: 36px;
+    }
   }
 
   .category-group {
@@ -118,6 +135,54 @@
     flex-wrap: wrap;
     gap: 12px;
     margin-top: 10px;
+  }
+
+  .category-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .category-add-toggle-btn {
+    border: none;
+    background: transparent;
+    color: #3B82F6;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .category-create-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 8px;
+    margin-top: 10px;
+
+    input {
+      min-width: 0;
+    }
+  }
+
+  .category-create-btn,
+  .category-cancel-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 0 12px;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .category-create-btn {
+    background: #3B82F6;
+    color: #fff;
+  }
+
+  .category-cancel-btn {
+    background: #e5e7eb;
+    color: #374151;
   }
 
   .category-group button {
@@ -145,6 +210,26 @@
 
   .category-group button:active {
     transform: scale(0.97);
+  }
+
+  .image-placeholder {
+    gap: 4px;
+
+    p {
+      margin-bottom: 0;
+    }
+
+    span {
+      width: 48px;
+      height: 48px;
+      border: none;
+      border-radius: 50%;
+      background: #F5F3FB;
+      color: #9B89D9;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 
 }
