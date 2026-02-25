@@ -168,6 +168,11 @@ const New = () => {
       return;
     }
 
+    if (!productData || productData.length === 0) {
+      alert("상품 생성 실패");
+      return;
+    }
+    
     const productNumber = productData[0].product_number;
 
     if (!categoryId) {
