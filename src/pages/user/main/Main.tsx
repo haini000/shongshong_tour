@@ -93,61 +93,44 @@ const Main = () => {
           <span className="view-all">전체보기</span>
         </div>
 
-        {/* 상품 카드 (반복문으로 처리 가능) */}
-        {/* <div className="product-card">
-          <div className="card-image">
-            <img src="https://via.placeholder.com/340x200" alt="product" />
-          </div>
-          <div className="card-info">
-            <div className="title-row">
-              <h4>제주도 3박 4일 감성 숙소 패키지</h4>
-              <span className="price">450,000원</span>
-            </div>
-            <p className="status">🟢 예약 가능</p>
-            <div className="footer-row">
-              <span className="rating">⭐ 4.9 (245)</span>
-              <button className="detail-btn" onClick={() => navigate("/products/1")}>
-                상세보기
-              </button>
-            </div>
-          </div>
-        </div> */}
-        {products.map((product) => (
-          <div key={product.product_number} className="product-card">
-            <div className="card-image">
-              <img
-                src={product.product_image || "/default.jpg"}
-                alt={product.product_name}
-                className="product-image"
-              />
-            </div>
-
-            <div className="card-info">
-              <div className="title-row">
-                <h4>{product.product_name}</h4>
-                <span className="price">
-                  {product.product_price.toLocaleString()}원
-                </span>
+        <div className="card-list">  
+          {products.map((product) => (
+            <div key={product.product_number} className="product-card">
+              <div className="card-image">
+                <img
+                  src={product.product_image || "/default.jpg"}
+                  alt={product.product_name}
+                  className="product-image"
+                />
               </div>
 
-              <p className="status">
-                {product.product_stock > 0 ? "🟢 예약 가능" : "🔴 마감"}
-              </p>
+              <div className="card-info">
+                <div className="title-row">
+                  <h4>{product.product_name}</h4>
+                  <span className="price">
+                    {product.product_price.toLocaleString()}원
+                  </span>
+                </div>
 
-              <div className="footer-row">
-                <span>출발일: {product.travel_date}</span>
-                <button
-                  className="detail-btn"
-                  onClick={() =>
-                    navigate(`/product/${product.product_number}`)
-                  }
-                >
-                  상세보기
-                </button>
+                <p className="status">
+                  {product.product_stock > 0 ? "🟢 예약 가능" : "🔴 마감"}
+                </p>
+
+                <div className="footer-row">
+                  <span>출발일: {product.travel_date}</span>
+                  <button
+                    className="detail-btn"
+                    onClick={() =>
+                      navigate(`/product/${product.product_number}`)
+                    }
+                  >
+                    상세보기
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
 
         <button className="more-btn">인기 상품 더보기</button>
       </section>
