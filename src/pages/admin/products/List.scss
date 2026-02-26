@@ -18,8 +18,6 @@
 
   h2 {
     margin: 0;
-    font-size: 1rem;
-    font-weight: 800;
     color: #111827;
   }
 }
@@ -44,7 +42,6 @@
 .list-count {
   margin: 4px 0 0;
   color: #6b7280;
-  font-size: 1rem;
 
   strong {
     color: #9575cd;
@@ -64,6 +61,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
+
+  .material-icons {
+    font-size: 18px;
+  }
 }
 
 .list-search {
@@ -125,7 +126,18 @@
   min-width: 0;
   flex: 1;
 
+  .card-title-link {
+    display: inline-block;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover h3 {
+      text-decoration: underline;
+    }
+  }
+
   h3 {
+    display: inline;
     margin: 0;
     font-size: 1.15rem;
     font-weight: 700;
