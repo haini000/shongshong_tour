@@ -6,7 +6,7 @@ const Header = () => {
 
   return (
     <header className="admin_header">
-      <h1 className="logo-tt" onClick={() => navigate("/admin")}>Shong Shong Tour</h1>
+      <h1 className="logo-tt" onClick={() => navigate("/")}>Shong Shong Tour</h1>
     </header>
   );
 };
