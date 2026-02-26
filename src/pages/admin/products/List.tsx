@@ -1,4 +1,12 @@
-﻿import { useEffect, useState } from "react";
+﻿/*
+* Page: ListPage
+* 담당자: 김두현
+* 역할: 관리자 상품 목록 및 UI 구현
+* 생성일: 2026-02-20
+* 최종 수정일: 2026-03-01
+*/
+
+import { useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabase";
 import { useNavigate } from "react-router-dom";
 import "./List.scss";
