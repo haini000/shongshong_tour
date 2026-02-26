@@ -1,4 +1,12 @@
-﻿import { useEffect, useState } from "react";
+﻿/*
+* Page: NewPage
+* 담당자: 김두현
+* 역할: 관리자 상품 수정 및 UI 구현
+* 생성일: 2026-02-19
+* 최종 수정일: 2026-03-01
+*/
+
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../../lib/supabase";
 import "./Edit.scss";
