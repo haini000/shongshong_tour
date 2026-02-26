@@ -9,18 +9,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../lib/supabase";
+import CategorySelector, { type Category } from "../../../components/admin/category/CategorySelector";
+import "../../../components/common.scss";
 import "./New.scss";
-
-type Category = {
-  category_id: number;
-  category_name: string;
-};
 
 const API_BASE = "/api/v1";
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 
 const New = () => {
   const navigate = useNavigate();
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const minTravelDate = `${tomorrow.getFullYear()}-${String(
+    tomorrow.getMonth() + 1
+  ).padStart(2, "0")}-${String(tomorrow.getDate()).padStart(2, "0")}`;
 
   const [isGenerating, setIsGenerating] = useState(false);
   const [aiError, setAiError] = useState("");
@@ -31,11 +33,7 @@ const New = () => {
   const [stock, setStock] = useState(0);
   const [date, setDate] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
-  const [categoryId, setCategoryId] = useState<number | null>(null);
-  const [isCategoryFormOpen, setIsCategoryFormOpen] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState("");
-  const [categoryError, setCategoryError] = useState("");
-  const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -65,46 +63,6 @@ const New = () => {
     fetchCategories();
   }, []);
 
-  const handleAddCategory = async () => {
-    const trimmedName = newCategoryName.trim();
-
-    if (!trimmedName) {
-      setCategoryError("카테고리 이름을 입력해주세요.");
-      return;
-    }
-
-    const duplicated = categories.some(
-      (item) => item.category_name.trim().toLowerCase() === trimmedName.toLowerCase()
-    );
-
-    if (duplicated) {
-      setCategoryError("이미 존재하는 카테고리입니다.");
-      return;
-    }
-
-    setCategoryError("");
-    setIsAddingCategory(true);
-
-    const { data, error } = await supabase
-      .from("Category")
-      .insert([{ category_name: trimmedName }])
-      .select("category_id, category_name")
-      .single();
-
-    setIsAddingCategory(false);
-
-    if (error || !data) {
-      console.error(error);
-      setCategoryError("카테고리 추가에 실패했습니다.");
-      return;
-    }
-
-    setCategories((prev) => [...prev, data]);
-    setCategoryId(data.category_id);
-    setNewCategoryName("");
-    setIsCategoryFormOpen(false);
-  };
-
   const validate = () => {
     const newErrors = {
       name: "",
@@ -128,7 +86,9 @@ const New = () => {
     }
 
     if (!date) {
-      newErrors.date = "여행 날짜를 선택해주세요.";
+      newErrors.date = "출발일을 선택해주세요.";
+    } else if (date < minTravelDate) {
+      newErrors.date = "출발일은 내일부터 선택 가능합니다.";
     }
 
     if (!desc.trim()) {
@@ -195,19 +155,19 @@ const New = () => {
 
     const productNumber = productData[0].product_number;
 
-    if (!categoryId) {
-      alert("카테고리를 선택해주세요.");
+    if (selectedCategoryIds.length === 0) {
+      alert("카테고리를 1개 이상 선택해주세요.");
       return;
     }
 
+    const productMapRows = selectedCategoryIds.map((id) => ({
+      product_number: productNumber,
+      category_id: id,
+    }));
+
     const { error: mapError } = await supabase
       .from("Product_Map")
-      .insert([
-        {
-          product_number: productNumber,
-          category_id: categoryId,
-        },
-      ]);
+      .insert(productMapRows);
 
     if (mapError) {
       console.error(mapError);
@@ -233,7 +193,7 @@ const New = () => {
     }
 
     if (!date) {
-      setAiError("기간을 먼저 입력해주세요.");
+      setAiError("날짜를 먼저 입력해주세요.");
       return;
     }
 
@@ -247,6 +207,7 @@ const New = () => {
       - 300자 이내
       - 고객이 예약하고 싶도록 작성
       - 출처, 링크, 참고문헌은 포함하지 말 것
+      - 상품명, 가격, 출발일 앞 뒤로 ** 표시 하지 말 것
       `;
 
     try {
@@ -282,14 +243,15 @@ const New = () => {
         </button>
 
         <div>
-          <h1 className="title">새로운 여행 상품 등록</h1>
-          <p className="subtitle">
+          <h1 className="title admin-tt">새로운 여행 상품 등록</h1>
+          <p className="subtitle admin-list-desc">
             관리자님, 숑숑투어의 새로운 모델을 추가해주세요.
           </p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit}>
+        <label className="admin-sub">대표 이미지</label>
         <div className="form-group image-group image-upload-box">
           <input
             type="file"
@@ -308,17 +270,18 @@ const New = () => {
           ) : (
             <div className="image-placeholder">
               <span className="material-icons">add_a_photo</span>
-              <p>이미지 업로드</p>
-              <small>PNG, JPG (최대 10MB)</small>
+              <p className="admin-product">이미지 업로드</p>
+              <small className="admin-iamge">PNG, JPG (최대 10MB)</small>
             </div>
           )}
         </div>
         {errors.image && <p className="error">{errors.image}</p>}
 
         <div className="form-group">
-          <label>상품명</label>
+          <label className="admin-sub">상품명</label>
           <input
             type="text"
+            className="admin-desc"
             placeholder="예: 제주도 3박 4일 힐링 패키지"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -326,74 +289,20 @@ const New = () => {
           {errors.name && <p className="error">{errors.name}</p>}
         </div>
 
-        <div className="form-group">
-          <div className="category-label-row">
-            <label>카테고리</label>
-            <button
-              type="button"
-              className="category-add-toggle-btn"
-              onClick={() => {
-                setIsCategoryFormOpen((prev) => !prev);
-                setCategoryError("");
-              }}
-            >
-              + 카테고리 추가
-            </button>
-          </div>
-
-          {isCategoryFormOpen && (
-            <div className="category-create-row">
-              <input
-                type="text"
-                placeholder="새 카테고리 이름"
-                value={newCategoryName}
-                onChange={(e) => setNewCategoryName(e.target.value)}
-              />
-              <button
-                type="button"
-                className="category-create-btn"
-                onClick={handleAddCategory}
-                disabled={isAddingCategory}
-              >
-                {isAddingCategory ? "추가 중..." : "추가"}
-              </button>
-              <button
-                type="button"
-                className="category-cancel-btn"
-                onClick={() => {
-                  setIsCategoryFormOpen(false);
-                  setNewCategoryName("");
-                  setCategoryError("");
-                }}
-              >
-                취소
-              </button>
-            </div>
-          )}
-          {categoryError && <p className="error">{categoryError}</p>}
-
-          <div className="category-group">
-            {categories.map((item) => (
-              <button
-                type="button"
-                key={item.category_id}
-                className={
-                  categoryId === item.category_id ? "active" : ""
-                }
-                onClick={() => setCategoryId(item.category_id)}
-              >
-                {item.category_name}
-              </button>
-            ))}
-          </div>
-        </div>
+        <CategorySelector
+          categories={categories}
+          setCategories={setCategories}
+          selectedCategoryIds={selectedCategoryIds}
+          setSelectedCategoryIds={setSelectedCategoryIds}
+        />
 
         <div className="row">
           <div className="form-group">
-            <label>상품 가격 (원)</label>
+            <label className="admin-sub">상품 가격 (원)</label>
             <input
               type="number"
               min="1"
+              className="admin-desc"
               value={price}
               onChange={(e) => setPrice(Number(e.target.value))}
             />
@@ -401,9 +310,11 @@ const New = () => {
           </div>
 
           <div className="form-group">
-            <label>여행 기간</label>
+            <label className="admin-sub">출발일</label>
             <input
               type="date"
+              min={minTravelDate}
+              className="admin-desc"
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />
@@ -413,10 +324,10 @@ const New = () => {
 
         <div className="form-group">
           <div className="desc-label">
-            <label htmlFor="product-desc">상세 설명</label>
+            <label className="admin-sub" htmlFor="product-desc">상세 설명</label>
             <button
               type="button"
-              className="ai-badge"
+              className="ai-badge admin-desc"
               onClick={(e) => {
                 e.stopPropagation();
                 void handleGenerateDesc();
@@ -431,6 +342,7 @@ const New = () => {
           <textarea
             id="product-desc"
             value={desc}
+            className="admin-desc"
             placeholder="여행 상품에 대한 매력적인 설명을 작성해 주세요."
             onChange={(e) => setDesc(e.target.value)}
           />
@@ -441,10 +353,11 @@ const New = () => {
 
 
         <div className="form-group">
-          <label>재고 수량</label>
+          <label>정원</label>
           <input
             type="number"
             min="1"
+            className="admin-desc"
             value={stock}
             onChange={(e) => setStock(Number(e.target.value))}
           />

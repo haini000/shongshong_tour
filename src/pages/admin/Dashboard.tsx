@@ -7,6 +7,7 @@
 */
 
 import { useNavigate } from "react-router-dom";
+import "../../components/common.scss";
 import "./Dashboard.scss";
 
 const Dashboard = () => {
@@ -14,7 +15,7 @@ const Dashboard = () => {
 
   return (
     <div className="admin-dashboard">
-      <h1 className="admin-title">관리자 페이지</h1>
+      <h1 className="admin-title admin-tt">관리자 페이지</h1>
 
       <div className="admin-menu">
         <div className="admin-card admin-card-products" onClick={() => navigate("/admin/products")}>

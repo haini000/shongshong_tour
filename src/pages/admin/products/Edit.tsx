@@ -9,11 +9,17 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../../lib/supabase";
+import CategorySelector, { type Category } from "../../../components/admin/category/CategorySelector";
 import "./Edit.scss";
 
 const Edit = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const minTravelDate = `${tomorrow.getFullYear()}-${String(
+    tomorrow.getMonth() + 1
+  ).padStart(2, "0")}-${String(tomorrow.getDate()).padStart(2, "0")}`;
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
@@ -21,7 +27,7 @@ const Edit = () => {
   const [stock, setStock] = useState(0);
   const [date, setDate] = useState("");
 
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
 
@@ -71,7 +77,7 @@ const Edit = () => {
     const fetchCategories = async () => {
       const { data, error } = await supabase
         .from("Category")
-        .select("*");
+        .select("category_id, category_name");
 
       if (data) setCategories(data);
       if (error) console.error(error);
@@ -84,6 +90,21 @@ const Edit = () => {
     if (!id) return;
 
     e.preventDefault();
+
+    if (!date) {
+      alert("출발일을 선택해주세요.");
+      return;
+    }
+
+    if (date < minTravelDate) {
+      alert("출발일은 내일부터 선택 가능합니다.");
+      return;
+    }
+
+    if (selectedCategories.length === 0) {
+      alert("카테고리를 1개 이상 선택해주세요.");
+      return;
+    }
 
     let finalImageUrl = imageUrl;
 
@@ -191,37 +212,13 @@ const Edit = () => {
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-title">카테고리</label>
-
-            <div className="category-box">
-              {categories.map((cat) => (
-                <label
-                  key={cat.category_id}
-                  className={`category-item ${selectedCategories.includes(cat.category_id) ? "active" : ""
-                    }`}
-                >
-                  <input
-                    type="checkbox"
-                    value={cat.category_id}
-                    checked={selectedCategories.includes(cat.category_id)}
-                    onChange={(e) => {
-                      const id = Number(e.target.value);
-
-                      if (e.target.checked) {
-                        setSelectedCategories([...selectedCategories, id]);
-                      } else {
-                        setSelectedCategories(
-                          selectedCategories.filter((c) => c !== id)
-                        );
-                      }
-                    }}
-                  />
-                  {cat.category_name}
-                </label>
-              ))}
-            </div>
-          </div>
+          <CategorySelector
+            categories={categories}
+            setCategories={setCategories}
+            selectedCategoryIds={selectedCategories}
+            setSelectedCategoryIds={setSelectedCategories}
+            label="카테고리"
+          />
 
           <div className="row">
             <div className="form-group">
@@ -240,6 +237,7 @@ const Edit = () => {
               <input
                 id="date"
                 type="date"
+                min={minTravelDate}
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
               />
