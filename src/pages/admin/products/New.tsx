@@ -1,4 +1,12 @@
-﻿import { useEffect, useState } from "react";
+﻿/*
+* Page: NewPage
+* 담당자: 김두현
+* 역할: 관리자 상품 등록 및 UI 구현
+* 생성일: 2026-02-19
+* 최종 수정일: 2026-03-01
+*/
+
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../lib/supabase";
 import "./New.scss";
@@ -8,8 +16,14 @@ type Category = {
   category_name: string;
 };
 
+const API_BASE = "/api/v1";
+const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+
 const New = () => {
   const navigate = useNavigate();
+
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [aiError, setAiError] = useState("");
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
@@ -31,6 +45,7 @@ const New = () => {
     date: "",
     desc: "",
     stock: "",
+    image: "",
   });
 
   const fetchCategories = async () => {
@@ -97,7 +112,12 @@ const New = () => {
       date: "",
       desc: "",
       stock: "",
+      image: "",
     };
+
+    if (!image) {
+      newErrors.image = "상품 이미지를 첨부해주세요.";
+    }
 
     if (!name.trim()) {
       newErrors.name = "상품명을 입력해주세요.";
@@ -133,8 +153,8 @@ const New = () => {
       const fileName = `${Date.now()}-${image.name}`;
 
       const { error: uploadError } = await supabase.storage
-      .from("product-images")
-      .upload(fileName, image);
+        .from("product-images")
+        .upload(fileName, image);
 
       if (uploadError) {
         console.error(uploadError);
@@ -143,8 +163,8 @@ const New = () => {
       }
 
       const { data } = supabase.storage
-      .from("product-images")
-      .getPublicUrl(fileName);
+        .from("product-images")
+        .getPublicUrl(fileName);
       imageUrl = data.publicUrl;
     }
 
@@ -172,7 +192,7 @@ const New = () => {
       alert("상품 생성 실패");
       return;
     }
-    
+
     const productNumber = productData[0].product_number;
 
     if (!categoryId) {
@@ -183,8 +203,8 @@ const New = () => {
     const { error: mapError } = await supabase
       .from("Product_Map")
       .insert([
-        { 
-          product_number: productNumber, 
+        {
+          product_number: productNumber,
           category_id: categoryId,
         },
       ]);
@@ -199,14 +219,65 @@ const New = () => {
     navigate("/admin/products");
   };
 
+  const handleGenerateDesc = async () => {
+    setAiError("");
+
+    if (!name.trim()) {
+      setAiError("상품명을 먼저 입력해주세요.");
+      return;
+    }
+
+    if (!price || price <= 0) {
+      setAiError("가격을 먼저 입력해주세요.");
+      return;
+    }
+
+    if (!date) {
+      setAiError("기간을 먼저 입력해주세요.");
+      return;
+    }
+
+    setIsGenerating(true);
+
+    const prompt = `
+      여행 상품 정보를 기반으로 매력적인 상품 설명을 작성해주세요.
+      - 상품명: ${name}
+      - 가격: ${price}
+      - 여행기간: ${date}
+      - 300자 이내
+      - 고객이 예약하고 싶도록 작성
+      - 출처, 링크, 참고문헌은 포함하지 말 것
+      `;
+
+    try {
+      const response = await fetch(
+        `${API_BASE}/question?content=${encodeURIComponent(prompt)}&client_id=${CLIENT_ID}`
+      );
+
+      if (!response.ok) {
+        throw new Error("API 요청 실패");
+      }
+
+      const data = await response.json();
+
+      setDesc(data.content);
+
+    } catch (error) {
+      console.error(error);
+      setAiError("AI 설명 생성 중 오류가 발생했습니다.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <div className="product-create">
       <div className="page-header">
-        <button 
-          type="button" 
-          className="back-btn" 
+        <button
+          type="button"
+          className="back-btn"
           onClick={() => navigate(-1)}
-          >
+        >
           <span className="material-icons">chevron_left</span>
         </button>
 
@@ -214,7 +285,7 @@ const New = () => {
           <h1 className="title">새로운 여행 상품 등록</h1>
           <p className="subtitle">
             관리자님, 숑숑투어의 새로운 모델을 추가해주세요.
-            </p>
+          </p>
         </div>
       </div>
 
@@ -242,6 +313,7 @@ const New = () => {
             </div>
           )}
         </div>
+        {errors.image && <p className="error">{errors.image}</p>}
 
         <div className="form-group">
           <label>상품명</label>
@@ -319,44 +391,63 @@ const New = () => {
         <div className="row">
           <div className="form-group">
             <label>상품 가격 (원)</label>
-            <input 
-              type="number" 
-              min="1" 
-              value={price} 
-              onChange={(e) => setPrice(Number(e.target.value))} 
-              />
+            <input
+              type="number"
+              min="1"
+              value={price}
+              onChange={(e) => setPrice(Number(e.target.value))}
+            />
             {errors.price && <p className="error">{errors.price}</p>}
           </div>
 
           <div className="form-group">
             <label>여행 기간</label>
-            <input 
-              type="date" 
-              value={date} 
-              onChange={(e) => setDate(e.target.value)} 
-              />
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
             {errors.date && <p className="error">{errors.date}</p>}
           </div>
         </div>
 
         <div className="form-group">
-          <label>상세 설명</label>
+          <div className="desc-label">
+            <label htmlFor="product-desc">상세 설명</label>
+            <button
+              type="button"
+              className="ai-badge"
+              onClick={(e) => {
+                e.stopPropagation();
+                void handleGenerateDesc();
+              }}
+              disabled={isGenerating}
+              aria-label="AI로 설명 생성"
+            >
+              {isGenerating ? "AI…" : "AI"}
+            </button>
+          </div>
+
           <textarea
+            id="product-desc"
             value={desc}
             placeholder="여행 상품에 대한 매력적인 설명을 작성해 주세요."
             onChange={(e) => setDesc(e.target.value)}
           />
+
+          {aiError && <p className="error">{aiError}</p>}
           {errors.desc && <p className="error">{errors.desc}</p>}
         </div>
 
+
         <div className="form-group">
           <label>재고 수량</label>
-          <input 
-            type="number" 
-            min="1" 
-            value={stock} 
-            onChange={(e) => setStock(Number(e.target.value))} 
-            />
+          <input
+            type="number"
+            min="1"
+            value={stock}
+            onChange={(e) => setStock(Number(e.target.value))}
+          />
           {errors.stock && <p className="error">{errors.stock}</p>}
         </div>
 
@@ -369,3 +460,4 @@ const New = () => {
 };
 
 export default New;
+
