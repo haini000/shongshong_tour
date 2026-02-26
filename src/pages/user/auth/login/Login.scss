@@ -1,0 +1,199 @@
+@use '/src/components/common.scss' as *;
+
+.login-page {
+  width: 100%;
+  max-width: 375px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background-color: $neutral-100; // #eef4ff
+  padding: 60px 20px 100px;
+  box-sizing: border-box;
+
+  // 1. 헤더 영역
+  .login-header {
+    margin-bottom: 40px;
+
+    .back-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      margin-bottom: 15px;
+
+      .icon-circle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background-color: #abbfff; // 뒤로가기 버튼 배경색
+        color: $white;
+        border-radius: 50%;
+        font-size: $font-18;
+        font-weight: bold;
+      }
+    }
+
+    h2 {
+      font-size: $font-24;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: $font-12;
+      color: #888;
+    }
+  }
+
+  // 2. 로그인 폼
+  .login-form {
+    .input-group {
+      background: $white;
+      border-radius: 15px;
+      padding: 5px 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+      margin-bottom: 12px;
+
+      input {
+        width: 100%;
+        padding: 20px 5px;
+        border: none;
+        font-size: $font-18;
+        outline: none;
+        background: transparent;
+
+        &:first-child {
+          border-bottom: 1px solid $light-gray;
+        }
+
+        &::placeholder {
+          color: #ccc;
+        }
+      }
+    }
+
+    .form-helper {
+      text-align: right;
+      margin-bottom: 25px;
+
+      .text-link {
+        background: none;
+        border: none;
+        color: #999;
+        font-size: $font-12;
+        cursor: pointer;
+      }
+    }
+
+    .login-submit-btn {
+      width: 100%;
+      height: 58px;
+      background-color: $accent-500; // #d6ccff (연보라)
+      color: #4a4a4a;
+      border: none;
+      border-radius: 15px;
+      font-size: $font-18;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 25px;
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+
+    .signup-prompt {
+      text-align: center;
+      font-size: $font-12;
+      color: #777;
+
+      span {
+        color: $primary-500; // #7c9aff
+        font-weight: 700;
+        margin-left: 5px;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // 3. 간편 로그인 섹션
+  .social-login {
+    margin-top: 50px;
+
+    .divider {
+      text-align: center;
+      position: relative;
+      margin-bottom: 25px;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: #e0e0e0;
+        z-index: 1;
+      }
+
+      span {
+        position: relative;
+        background: $neutral-100;
+        padding: 0 15px;
+        color: #aaa;
+        font-size: $font-12;
+        z-index: 2;
+      }
+    }
+
+    .social-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .social-item {
+        display: flex;
+        align-items: center;
+        background: $white;
+        padding: 18px 20px;
+        border-radius: 18px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+        cursor: pointer;
+        position: relative;
+
+        .logo {
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 15px;
+          font-weight: 900;
+          color: $white;
+        }
+
+        &.naver .logo { background-color: #03c75a; }
+        &.kakao .logo { background-color: #fee500; color: #3c1e1e; }
+        &.google .logo { background-color: $white; border: 1px solid #eee; color: #777; }
+
+        .label {
+          font-size: $font-12;
+          font-weight: 600;
+          color: #444;
+          flex-grow: 1;
+        }
+
+        .arrow {
+          color: #ddd;
+          font-size: $font-12;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
