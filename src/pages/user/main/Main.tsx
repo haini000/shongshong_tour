@@ -154,10 +154,11 @@ const Main = () => {
 
                 <p className="status">
                   {product.product_stock > 0 ? "🟢 예약 가능" : "🔴 마감"}
+                  <span>정원 : {product.product_stock}명</span>
                 </p>
 
                 <div className="footer-row">
-                  <span>출발일: {product.travel_date}</span>
+                  <span>출발일 : {product.travel_date}</span>
                   <button
                     className="detail-btn"
                     onClick={() =>

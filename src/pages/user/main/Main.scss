@@ -214,9 +214,12 @@ $bg-light: #f8faff;
           }
 
           .status {
+            width: 50%;
             font-size: 0.75rem;
             color: #4caf50;
             margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
           }
 
           .footer-row {
