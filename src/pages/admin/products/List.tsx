@@ -174,7 +174,14 @@ const List = () => {
 
             <div className="card-content">
               <div className="card-texts">
-                <h3>{product.product_name}</h3>
+                <a
+                  href={`/product/${product.product_number}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="card-title-link"
+                >
+                  <h3>{product.product_name}</h3>
+                </a>
                 <p className="description admin-desc">
                   {product.product_desc?.trim() ||
                     product.product_description?.trim() ||
