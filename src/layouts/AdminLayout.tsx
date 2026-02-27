@@ -24,7 +24,7 @@ const AdminLayout = () => {
 
         if (authError || !user) {
           alert("관리자만 접근할 수 있습니다.");
-          navigate("/", { replace: true });
+          navigate("/login", { replace: true });
           return;
         }
 
