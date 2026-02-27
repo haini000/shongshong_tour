@@ -11,10 +11,21 @@ interface Product {
   product_stock: number;
   travel_date: string;
   product_image: string | null;
+  product_description?: string | null;
+}
+
+interface Category {
+  category_id: number;
+  category_name: string;
 }
 
 const Main = () => {
   const navigate = useNavigate();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [adminCategories, setAdminCategories] = useState<Category[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const textSlice = (text: string, max = 50) => text.length > max ? `${text.slice(0, max)}...` : text;
+  
 
   // 임시 데이터 (나중에 Supabase 연결)
   const categories = [
@@ -23,10 +34,6 @@ const Main = () => {
     { id: 3, name: "투어", icon: "🚌" },
     { id: 4, name: "패키지", icon: "🧳" },
   ];
-
-  const filters = ["전체", "자연/힐링", "호캉스", "액티비티", "제주", "강원", "부산", "전라/경상", "수도권"];
-
-  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -41,7 +48,20 @@ const Main = () => {
       }
     };
 
+    const fetchCategories = async () => {
+      const { data, error } = await supabase
+        .from("Category")
+        .select("category_id, category_name");
+
+      if (error) {
+        console.error("카테고리 조회 에러:", error);
+      } else {
+        setAdminCategories(data || []);
+      }
+    };
+
     fetchProducts();
+    fetchCategories();
   }, []);
 
   return (
@@ -50,7 +70,7 @@ const Main = () => {
       <section className="hero-banner">
         <div className="banner-text">
           <p>꿈꾸던 국내 여행을</p>
-          <h2>지금 숑숑투어와 함께</h2>
+          <h2>지금 슝슝투어와 함께</h2>
         </div>
       </section>
 
@@ -64,18 +84,7 @@ const Main = () => {
         ))}
       </nav>
 
-      {/* 3. Filter Tags */}
-      <section className="filter-section">
-        <div className="filter-group">
-          {filters.map((tag, index) => (
-            <button key={index} className={`filter-chip ${index === 0 ? 'active' : ''}`}>
-              {tag}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* 4. Search Bar */}
+      {/* 3. Search Bar */}
       <section className="search-section">
         <div className="search-bar">
           <div className="text">
@@ -83,6 +92,29 @@ const Main = () => {
             <p>한국 인기 여행지를 지금 검색해보세요</p>
           </div>
           <button className="search-btn">🔍</button>
+        </div>
+      </section>
+
+      {/* 4. Categories */}
+      <section className="filter-section">
+        <div className="filter-group">
+          {adminCategories.length === 0 ? (
+            <p className="filter-empty">등록된 카테고리가 없습니다.</p>
+          ) : (
+            adminCategories.map((category) => (
+              <button
+                key={category.category_id}
+                className={`filter-chip ${selectedCategoryId === category.category_id ? "active" : ""}`}
+                onClick={() =>
+                  setSelectedCategoryId((prev) =>
+                    prev === category.category_id ? null : category.category_id
+                  )
+                }
+              >
+                {category.category_name}
+              </button>
+            ))
+          )}
         </div>
       </section>
 
@@ -106,10 +138,18 @@ const Main = () => {
 
               <div className="card-info">
                 <div className="title-row">
-                  <h4>{product.product_name}</h4>
-                  <span className="price">
-                    {product.product_price.toLocaleString()}원
-                  </span>
+                  <h4>{product.product_name}
+                    <span className="price">
+                      {product.product_price.toLocaleString()}원
+                    </span>
+                  </h4>
+                  <p className="description">
+                    {textSlice(
+                      product.product_desc?.trim() ||
+                      product.product_description?.trim() ||
+                      "상품 설명이 없습니다."
+                      )}
+                  </p>
                 </div>
 
                 <p className="status">
