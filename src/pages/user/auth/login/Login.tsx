@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../../../lib/supabase"; 
+import { supabase } from "../../../../lib/supabase";
 import "./Login.scss";
 
 const Login = () => {
@@ -8,11 +8,12 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [kakaoLoading, setKakaoLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setLoginLoading(true);
 
     try {
       // 1. Supabase Auth 로그인 시도
@@ -25,7 +26,7 @@ const Login = () => {
 
       // 🔹 세션이 브라우저에 확실히 저장될 때까지 잠시 대기하거나 유저 정보를 다시 확인합니다.
       if (authData?.user) {
-        
+
         // 2. User 테이블에서 user_role 확인 (Edit.tsx의 fetch 패턴 적용)
         const { data: userData, error: userError } = await supabase
           .from("User")
@@ -36,7 +37,7 @@ const Login = () => {
         if (userError || !userData) {
           console.error("DB 권한 조회 실패:", userError);
           // 권한 조회 실패 시 기본 페이지로 이동시키되 세션은 유지됨
-          navigate("/"); 
+          navigate("/");
           return;
         }
 
@@ -46,28 +47,52 @@ const Login = () => {
 
         if (role === "admin") {
           alert("관리자 계정으로 로그인되었습니다.");
-          navigate("/admin"); 
+          navigate("/admin");
         } else {
           alert("로그인 성공!");
-          navigate("/"); 
+          navigate("/");
         }
       }
     } catch (error: any) {
       alert(`로그인 실패: ${error.message}`);
       console.error(error);
     } finally {
-      setLoading(false);
+      setLoginLoading(false);
     }
   };
+
+  async function signInWithKakao() {
+    if (kakaoLoading) return;
+
+    setKakaoLoading(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "kakao",
+      options: {
+        redirectTo: `${window.location.origin}/`,
+      },
+    });
+
+    if (error) {
+      alert(`카카오 로그인 실패: ${error.message}`);
+      setKakaoLoading(false);
+    }
+  }
+
 
   return (
     <div className="login-page">
       <header className="login-header">
-        <button className="back-btn" onClick={() => navigate(-1)}>
-          <span className="icon-circle">〈</span>
+        <button
+          type="button"
+          className="back-btn"
+          onClick={() => navigate(-1)}
+        >
+          <span className="material-icons">chevron_left</span>
         </button>
-        <h2>로그인</h2>
-        <p>여행의 시작, 숑숑투어와 함께하세요</p>
+        <div>
+          <h2>로그인</h2>
+          <p>여행의 시작, 숑숑투어와 함께하세요</p>
+        </div>
       </header>
 
       <form className="login-form" onSubmit={handleLogin}>
@@ -87,13 +112,13 @@ const Login = () => {
             required
           />
         </div>
-        
+
         <div className="form-helper">
           <button type="button" className="text-link">비밀번호를 잊으셨나요?</button>
         </div>
 
-        <button type="submit" className="login-submit-btn" disabled={loading}>
-          {loading ? "확인 중..." : "로그인"}
+        <button type="submit" className="login-submit-btn" disabled={loginLoading}>
+          {loginLoading ? "확인 중..." : "로그인"}
         </button>
 
         <div className="signup-prompt">
@@ -105,21 +130,28 @@ const Login = () => {
       <section className="social-login">
         <div className="divider"><span>간편 로그인</span></div>
         <div className="social-buttons">
-          <div className="social-item naver">
+          <button type="button" className="social-item naver">
             <span className="logo">N</span>
             <span className="label">네이버로 시작하기</span>
             <span className="arrow">〉</span>
-          </div>
-          <div className="social-item kakao">
+          </button>
+          <button
+            type="button"
+            className="social-item kakao"
+            onClick={signInWithKakao}
+            disabled={kakaoLoading}
+          >
             <span className="logo">K</span>
-            <span className="label">카카오로 시작하기</span>
+            <span className="label">
+              {kakaoLoading ? "카카오 로그인 연결 중..." : "카카오로 시작하기"}
+            </span>
             <span className="arrow">〉</span>
-          </div>
-          <div className="social-item google">
+          </button>
+          <button type="button" className="social-item google">
             <span className="logo">G</span>
             <span className="label">Google로 시작하기</span>
             <span className="arrow">〉</span>
-          </div>
+          </button>
         </div>
       </section>
     </div>
