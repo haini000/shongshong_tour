@@ -353,7 +353,7 @@ const New = () => {
 
 
         <div className="form-group">
-          <label>정원</label>
+          <label className="admin-sub">정원</label>
           <input
             type="number"
             min="1"

@@ -1,24 +1,44 @@
 @use '/src/components/common.scss' as *;
 
 .join {
-  max-width: 375px;
   width: 100%;
+  max-width: 375px;
   margin: 0 auto;
-  padding: 40px 20px 60px;
-  background: $white;
+  padding: 32px 0;
+  background: #eef4ff;
   font-family: $font-admin;
+
+  .back-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: #60A5FA;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    .material-icons {
+      font-size: 36px;
+    }
+  }
 
   /* ===== 타이틀 ===== */
   &__title {
     margin-bottom: 32px;
+    display: flex;
+    gap: 16px;
+    padding-left: 24px;
 
     h1 {
       font-size: $font-20;
       font-weight: 700;
+      margin-top: 0;
     }
 
     p {
-      margin-top: 6px;
       font-size: $font-12;
       color: rgba($black, 0.6);
     }
@@ -26,6 +46,8 @@
 
   /* ===== 폼 ===== */
   &__form {
+    padding-inline: 24px;
+
     .form-group {
       display: flex;
       flex-direction: column;
@@ -37,20 +59,47 @@
         margin-bottom: 6px;
       }
 
-      input {
-        height: 46px;
+      .input-wrap {
+        position: relative;
+        overflow: visible;
+      }
+
+      .input-wrap input {
+        width: 100%;
+        height: 52px;
         border-radius: 12px;
         border: 1px solid rgba($black, 0.08);
-        padding: 0 14px;
+        padding: 18px 14px 6px;
         font-size: $font-12;
-        background: $light-gray;
+        background: $white;
         outline: none;
-        transition: 0.2s;
+        transition: border-color 0.2s ease;
 
         &:focus {
           border-color: $primary-500;
-          background: $white;
         }
+      }
+
+      .float-placeholder {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: $font-12;
+        color: rgba($black, 0.45);
+        pointer-events: none;
+        transition: all 0.18s ease;
+        background: $white;
+        padding: 0 2px;
+        z-index: 1;
+      }
+
+      .input-wrap:focus-within .float-placeholder,
+      .input-wrap input:not(:placeholder-shown) + .float-placeholder {
+        top: 7px;
+        transform: translateY(0);
+        font-size: 11px;
+        color: $primary-500;
       }
 
       .error {
@@ -65,11 +114,12 @@
       align-items: center;
       gap: 6px;
 
-      input {
+      .input-wrap {
         flex: 1;
+        min-width: 0;
       }
 
-      span {
+      .at {
         font-size: $font-12;
       }
     }
@@ -86,6 +136,7 @@
     }
 
     .join-btn {
+      display: block;
       width: 100%;
       height: 50px;
       border-radius: 14px;

@@ -46,6 +46,7 @@
   .desc-label {
     display: inline-flex;
     align-items: center;
+    margin-bottom: 6px;
     gap: 6px;
 
     label {
@@ -79,9 +80,6 @@
     grid-template-columns: 152px 2fr;
     gap: 12px;
 
-    .form-group {
-      flex: 1;
-    }
   }
 
   .submit-btn {
