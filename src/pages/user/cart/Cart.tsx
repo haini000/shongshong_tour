@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router-dom';
-import Navigation from '../../../components/user/footer/footer';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -58,38 +57,25 @@ export default function Cart() {
   }
 
   return (
-    <div style={{ backgroundColor: '#f8faff', minHeight: '100vh', display: 'flex', justifyContent: 'center', fontFamily: 'sans-serif' }}>
+    <div style={{ backgroundColor: '#f8faff', minHeight: 'calc(100vh - 120px)', display: 'flex', justifyContent: 'center', fontFamily: 'sans-serif' }}>
       <div style={{ width: '100%', maxWidth: '430px', backgroundColor: 'white', position: 'relative', display: 'flex', flexDirection: 'column', boxShadow: '0 0 30px rgba(0,0,0,0.05)' }}>
         
-        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px', alignItems: 'center' }}>
-          <span style={{ color: '#5dade2', fontSize: '26px', fontFamily: '"Pacifico", cursive' }}>
-            Shong Shong Tour
-          </span>
-          <div style={{ 
-            width: '36px', height: '36px', borderRadius: '50%', backgroundColor: '#f0f7ff', 
-            display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#5dade2', fontSize: '12px', fontWeight: 'bold' 
-          }}>
-            MY
+        {/* 장바구니 타이틀 영역 (헤더는 Layout에서 처리하므로 타이틀만 유지) */}
+        <div style={{ padding: '20px 20px 25px', display: 'flex', alignItems: 'center', gap: '15px' }}>
+          <div 
+            onClick={() => navigate(-1)}
+            style={{ 
+              backgroundColor: '#5dade2', color: 'white', width: '38px', height: '38px', borderRadius: '50%', 
+              display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer',
+              boxShadow: '0 4px 10px rgba(93, 173, 226, 0.3)', fontSize: '20px', fontWeight: 'bold'
+            }}>
+            &lt;
           </div>
+          <h2 style={{ margin: 0, fontSize: '24px', fontWeight: '800', color: '#333' }}>장바구니</h2>
         </div>
 
-        <div style={{ padding: '10px 20px 25px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-            <div 
-              onClick={() => navigate(-1)}
-              style={{ 
-                backgroundColor: '#5dade2', color: 'white', width: '38px', height: '38px', borderRadius: '50%', 
-                display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer',
-                boxShadow: '0 4px 10px rgba(93, 173, 226, 0.3)', fontSize: '20px', fontWeight: 'bold'
-              }}>
-              &lt;
-            </div>
-            <h2 style={{ margin: 0, fontSize: '24px', fontWeight: '800', color: '#333' }}>장바구니</h2>
-          </div>
-          <span style={{ color: '#5dade2', fontSize: '14px', fontWeight: '600' }}>나의 여행 리스트</span>
-        </div>
-
-        <div style={{ padding: '0 20px', flex: 1, overflowY: 'auto', paddingBottom: '240px' }}>
+        {/* 장바구니 아이템 리스트 */}
+        <div style={{ padding: '0 20px', flex: 1, overflowY: 'auto', paddingBottom: '180px' }}>
           {cartItems.length === 0 ? (
             <div style={{ textAlign: 'center', marginTop: '100px', color: '#bbb' }}>
               <div style={{ fontSize: '48px', marginBottom: '15px' }}>🛒</div>
@@ -103,7 +89,7 @@ export default function Cart() {
               }}>
                 <img 
                   src={item.Product?.product_image || 'https://images.unsplash.com/photo-1500835595353-b0ad2e58b8df?w=400'} 
-                  style={{ width: '95px', height: '95px', borderRadius: '18px', objectFit: 'cover' }} 
+                  style={{ width: '90px', height: '90px', borderRadius: '18px', objectFit: 'cover' }} 
                 />
                 <div style={{ marginLeft: '18px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -111,13 +97,9 @@ export default function Cart() {
                     <span style={{ cursor: 'pointer', color: '#ccc', fontSize: '18px', fontWeight: 'bold' }} onClick={() => deleteItem(item.cart_id)}>×</span>
                   </div>
                   <div style={{ marginTop: '10px', fontSize: '14px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <span style={{ color: '#999' }}>가격</span> 
                       <span style={{ color: '#4285f4', fontWeight: '700' }}>₩ {item.Product?.product_price?.toLocaleString()}</span>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: '#999' }}>출발일</span> 
-                      <span style={{ color: '#555', fontWeight: '500' }}>{item.Product?.travel_date}</span>
                     </div>
                   </div>
                 </div>
@@ -126,24 +108,20 @@ export default function Cart() {
           )}
         </div>
 
+        {/* 금액 합계 및 주문하기 버튼 섹션 */}
         <div style={{ 
-          position: 'absolute', bottom: '60px', width: '100%', backgroundColor: 'white', 
-          borderTop: '1px solid #f0f0f0', borderRadius: '30px 30px 0 0', boxShadow: '0 -10px 30px rgba(0,0,0,0.03)',
-          zIndex: 10
+          padding: '25px', backgroundColor: 'white', borderTop: '1px solid #f0f0f0',
+          borderRadius: '30px 30px 0 0', boxShadow: '0 -10px 30px rgba(0,0,0,0.03)'
         }}>
-          <div style={{ padding: '25px 25px 15px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <span style={{ fontSize: '17px', color: '#888', fontWeight: '500' }}>합계</span>
-              <span style={{ fontSize: '28px', fontWeight: '900', color: '#1a3a8a' }}>₩ {totalPrice.toLocaleString()}</span>
-            </div>
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <button onClick={clearCart} style={{ flex: 1, padding: '16px', borderRadius: '16px', border: 'none', backgroundColor: '#f1f5f9', color: '#64748b', fontWeight: '700', cursor: 'pointer' }}>비우기</button>
-              <button style={{ flex: 1.8, padding: '16px', borderRadius: '16px', border: 'none', backgroundColor: '#4285f4', color: 'white', fontWeight: '700', cursor: 'pointer', boxShadow: '0 6px 15px rgba(66, 133, 244, 0.3)' }}>주문하기</button>
-            </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <span style={{ fontSize: '17px', color: '#888', fontWeight: '500' }}>합계</span>
+            <span style={{ fontSize: '28px', fontWeight: '900', color: '#1a3a8a' }}>₩ {totalPrice.toLocaleString()}</span>
+          </div>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button onClick={clearCart} style={{ flex: 1, padding: '16px', borderRadius: '16px', border: 'none', backgroundColor: '#f1f5f9', color: '#64748b', fontWeight: '700', cursor: 'pointer' }}>비우기</button>
+            <button style={{ flex: 1.8, padding: '16px', borderRadius: '16px', border: 'none', backgroundColor: '#4285f4', color: 'white', fontWeight: '700', cursor: 'pointer' }}>주문하기</button>
           </div>
         </div>
-
-        <Navigation />
 
       </div>
     </div>
