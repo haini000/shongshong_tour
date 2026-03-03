@@ -86,6 +86,14 @@ const Edit = () => {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [preview]);
+
   const handleUpdate = async (e: React.FormEvent) => {
     if (!id) return;
 
@@ -173,10 +181,10 @@ const Edit = () => {
 
         <form onSubmit={handleUpdate}>
 
-          {imageUrl && (
+          {(preview || imageUrl) && (
             <img
-              src={imageUrl}
-              alt="현재 이미지"
+              src={preview || imageUrl || ""}
+              alt={preview ? "새 이미지 미리보기" : "현재 이미지"}
               className="edit-preview"
             />
           )}
@@ -186,21 +194,17 @@ const Edit = () => {
               type="file"
               accept="image/png, image/jpeg"
               onChange={(e) => {
-                if (e.target.files) {
-                  const file = e.target.files[0];
+                const file = e.target.files?.[0];
+
+                if (file) {
                   setNewImage(file);
                   setPreview(URL.createObjectURL(file));
+                } else {
+                  setNewImage(null);
+                  setPreview(null);
                 }
               }}
             />
-
-            {preview && (
-              <img
-                src={preview}
-                alt="새 이미지 미리보기"
-                className="edit-preview"
-              />
-            )}
           </div>
 
           <div className="form-group">
