@@ -2,8 +2,6 @@
 
 .join {
   width: 100%;
-  max-width: 375px;
-  margin: 0 auto;
   padding: 32px 0;
   background: #eef4ff;
   font-family: $font-admin;
@@ -27,6 +25,8 @@
 
   /* ===== 타이틀 ===== */
   &__title {
+    max-width: 375px;
+    margin: 0 auto;
     margin-bottom: 32px;
     display: flex;
     gap: 16px;
@@ -46,6 +46,8 @@
 
   /* ===== 폼 ===== */
   &__form {
+    max-width: 375px;
+    margin: 0 auto;
     padding-inline: 24px;
 
     .form-group {
