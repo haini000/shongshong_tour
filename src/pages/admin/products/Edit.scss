@@ -12,6 +12,40 @@
     flex-direction: column;
   }
 
+  .page-header {
+    padding: 0 0 56px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    h1 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    
+    p{
+      margin: 0;
+    }
+  }
+
+  .back-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: #3b82f6;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    .material-icons {
+      font-size: 36px;
+    }
+  }
+
   h1 {
     font-size: 20px;
     font-weight: 700;
@@ -236,10 +270,11 @@
     flex-direction: column;
     gap: 6px;
 
-    label {
-      font-size: 13px;
-      font-weight: 600;
-      color: #374151;
-    }
+  }
+  
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
   }
 }

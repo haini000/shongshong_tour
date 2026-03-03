@@ -1,9 +1,9 @@
 ﻿/*
-* Page: NewPage
+* Page: EditPage
 * 담당자: 김두현
 * 역할: 관리자 상품 수정 및 UI 구현
 * 생성일: 2026-02-19
-* 최종 수정일: 2026-03-01
+* 최종 수정일: 2026-03-03
 */
 
 import { useEffect, useState } from "react";
@@ -176,11 +176,22 @@ const Edit = () => {
   return (
     <div className="product-edit">
       <div className="edit-container">
-        <h1>상품 정보 수정</h1>
-        <p>등록된 기존 정보를 확인하고 수정해주세요.</p>
+        <div className="page-header">
+          <button
+            type="button"
+            className="back-btn"
+            onClick={() => navigate(-1)}
+          >
+            <span className="material-icons">chevron_left</span>
+          </button>
+          <div>
+            <h1>상품 정보 수정</h1>
+            <p>등록된 기존 정보를 확인하고 수정해주세요.</p>
+          </div>
+        </div>
 
         <form onSubmit={handleUpdate}>
-
+          <label htmlFor="name">대표 이미지</label>
           {(preview || imageUrl) && (
             <img
               src={preview || imageUrl || ""}
