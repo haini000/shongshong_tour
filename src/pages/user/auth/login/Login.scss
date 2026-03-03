@@ -2,8 +2,6 @@
 
 .login-page {
   width: 100%;
-  max-width: 375px;
-  margin: 0 auto;
   min-height: 100vh;
   background-color: $neutral-100; // #eef4ff
   padding: 60px 20px 100px;
@@ -11,6 +9,8 @@
 
   // 1. 헤더 영역
   .login-header {
+    max-width: 375px;
+    margin: 0 auto;
     margin-bottom: 32px;
     display: flex;
     gap: 16px;
@@ -47,6 +47,9 @@
 
   // 2. 로그인 폼
   .login-form {
+    max-width: 375px;
+    margin: 0 auto;
+    
     .input-group {
       background: $white;
       border-radius: 15px;
@@ -120,6 +123,8 @@
 
   // 3. 간편 로그인 섹션
   .social-login {
+    max-width: 375px;
+    margin: 0 auto;
     margin-top: 50px;
 
     .divider {
