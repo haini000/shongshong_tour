@@ -4,11 +4,12 @@
   width: 100%;
   min-height: 100vh;
   background-color: $neutral-100; // #eef4ff
-  padding: 60px 20px 100px;
+  padding: 32px 20px 100px;
   box-sizing: border-box;
 
   // 1. 헤더 영역
   .login-header {
+    padding-inline: 24px;
     max-width: 375px;
     margin: 0 auto;
     margin-bottom: 32px;
@@ -47,6 +48,7 @@
 
   // 2. 로그인 폼
   .login-form {
+    padding-inline: 24px;
     max-width: 375px;
     margin: 0 auto;
     
@@ -123,6 +125,7 @@
 
   // 3. 간편 로그인 섹션
   .social-login {
+    padding-inline: 24px;
     max-width: 375px;
     margin: 0 auto;
     margin-top: 50px;
