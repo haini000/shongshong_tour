@@ -15,7 +15,7 @@ $light-gray: #f2f2f7;
 
 // 공용 폰트 사이즈
 :root {
-    --font-base: 18px;
+  --font-base: 18px;
 }
 
 $font-18: var(--font-base);
@@ -29,10 +29,60 @@ $font-secondary: 'Quicksand', sans-serif;
 $font-admin: 'Noto Sans KR', sans-serif;
 
 .main-content {
-    width: 100%;
-    max-width: 375px;
-    margin: 0 auto;
-    background-color: $neutral-100;
-    padding: 16px;
-    position: relative;
+  width: 100%;
+  margin: 0 auto;
+  background-color: $neutral-100;
+  padding: 16px;
+  position: relative;
+}
+
+// 관리자 폰트
+
+.admin-tt{
+  font-family: $font-admin;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.admin-label {
+  font-family: $font-admin;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.admin-sub {
+  font-family: $font-admin;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.admin-desc{
+  font-family: $font-admin;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.admin-list-desc {
+  font-family: $font-admin;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.admin-product {
+  font-family: $font-admin;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.admin-iamge {
+  font-family: $font-admin;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
 }

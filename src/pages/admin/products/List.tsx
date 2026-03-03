@@ -1,6 +1,15 @@
-﻿import { useEffect, useState } from "react";
+﻿/*
+* Page: ListPage
+* 담당자: 김두현
+* 역할: 관리자 상품 목록 및 UI 구현
+* 생성일: 2026-02-20
+* 최종 수정일: 2026-03-01
+*/
+
+import { useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabase";
 import { useNavigate } from "react-router-dom";
+import "../../../components/common.scss";
 import "./List.scss";
 
 interface Product {
@@ -23,7 +32,10 @@ const List = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       const { data } = await supabase.from("Product").select("*");
-      setProducts(data || []);
+      const sorted = (data || []).sort(
+        (a, b) => b.product_number - a.product_number
+      );
+      setProducts(sorted);
     };
 
     fetchProducts();
@@ -121,8 +133,8 @@ const List = () => {
           </button>
 
           <div>
-            <h2>상품 관리</h2>
-            <p className="list-count">
+            <h2 className="admin-tt">상품 관리</h2>
+            <p className="list-count admin-list-desc">
               총 <strong>{filteredProducts.length}</strong>개의 여행 상품
             </p>
           </div>
@@ -141,6 +153,7 @@ const List = () => {
         <span className="material-icons">search</span>
         <input
           type="text"
+          className="admin-desc"
           placeholder="상품 검색"
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
@@ -161,8 +174,15 @@ const List = () => {
 
             <div className="card-content">
               <div className="card-texts">
-                <h3>{product.product_name}</h3>
-                <p className="description">
+                <a
+                  href={`/product/${product.product_number}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="card-title-link"
+                >
+                  <h3>{product.product_name}</h3>
+                </a>
+                <p className="description admin-desc">
                   {product.product_desc?.trim() ||
                     product.product_description?.trim() ||
                     "상품 설명이 없습니다."}

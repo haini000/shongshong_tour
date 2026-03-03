@@ -43,7 +43,7 @@ const Products = () => {
       <p>{product.product_price}원</p>
       <p>{product.product_desc}</p>
       <p>출발일: {product.travel_date}</p>
-      <p>남은 좌석: {product.product_stock}</p>
+      <p>정원: {product.product_stock}명</p>
     </div>
   );
 };

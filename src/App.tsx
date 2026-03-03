@@ -5,8 +5,8 @@ import "./lib/supabase";
 
 import Layout from "./layouts/Layout"
 import Main from "./pages/user/main/Main"
-import Login from "./pages/user/auth/Login";
-import Join from "./pages/user/auth/Join";
+import Login from "./pages/user/auth/login/Login";
+import Join from "./pages/user/auth/join/Join";
 import Product from "./pages/user/products/Product";
 import Cart from "./pages/user/cart/Cart";
 import Checkout from "./pages/user/checkout/Checkout";

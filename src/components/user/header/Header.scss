@@ -1,7 +1,7 @@
 @use '/src/components/common.scss' as *; 
 
 .common-header {
-  width: 375px;
+  width: 100%;
   padding: 10px;
   background-color: #ffffff;
   margin: 0 auto;
@@ -10,7 +10,6 @@
   border-bottom: 1px solid #f0f0f0;
 
   .header-inner {
-    max-width: 375px;
     display: flex;
     justify-content: space-between;
     align-items: center;
