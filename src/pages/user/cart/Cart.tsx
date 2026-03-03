@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router-dom';
+import Navigation from '../../../components/user/footer/footer';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -48,7 +49,13 @@ export default function Cart() {
 
   const totalPrice = cartItems.reduce((total, item) => total + (item.Product?.product_price || 0), 0);
 
-  if (loading) return <div style={{ textAlign: 'center', padding: '100px', color: '#5dade2', fontWeight: 'bold' }}>Shong Shong 여행 준비 중...</div>;
+  if (loading) {
+    return (
+      <div style={{ textAlign: 'center', padding: '100px', color: '#5dade2', fontWeight: 'bold' }}>
+        Shong Shong 여행 준비 중...
+      </div>
+    );
+  }
 
   return (
     <div style={{ backgroundColor: '#f8faff', minHeight: '100vh', display: 'flex', justifyContent: 'center', fontFamily: 'sans-serif' }}>
@@ -60,7 +67,7 @@ export default function Cart() {
           </span>
           <div style={{ 
             width: '36px', height: '36px', borderRadius: '50%', backgroundColor: '#f0f7ff', 
-            display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#5dade2', fontSize: '12px', fontWeight: 'bold'
+            display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#5dade2', fontSize: '12px', fontWeight: 'bold' 
           }}>
             MY
           </div>
@@ -119,7 +126,11 @@ export default function Cart() {
           )}
         </div>
 
-        <div style={{ position: 'absolute', bottom: 0, width: '100%', backgroundColor: 'white', borderTop: '1px solid #f0f0f0', borderRadius: '30px 30px 0 0', boxShadow: '0 -10px 30px rgba(0,0,0,0.03)' }}>
+        <div style={{ 
+          position: 'absolute', bottom: '60px', width: '100%', backgroundColor: 'white', 
+          borderTop: '1px solid #f0f0f0', borderRadius: '30px 30px 0 0', boxShadow: '0 -10px 30px rgba(0,0,0,0.03)',
+          zIndex: 10
+        }}>
           <div style={{ padding: '25px 25px 15px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <span style={{ fontSize: '17px', color: '#888', fontWeight: '500' }}>합계</span>
@@ -130,22 +141,9 @@ export default function Cart() {
               <button style={{ flex: 1.8, padding: '16px', borderRadius: '16px', border: 'none', backgroundColor: '#4285f4', color: 'white', fontWeight: '700', cursor: 'pointer', boxShadow: '0 6px 15px rgba(66, 133, 244, 0.3)' }}>주문하기</button>
             </div>
           </div>
-
-          <div style={{ height: '75px', display: 'flex', justifyContent: 'space-around', alignItems: 'center', paddingBottom: '10px' }}>
-            <div onClick={() => navigate('/')} style={{ textAlign: 'center', cursor: 'pointer', color: '#ccc' }}>
-              <div style={{ fontSize: '20px' }}>🏠</div>
-              <div style={{ fontSize: '11px', marginTop: '4px' }}>홈</div>
-            </div>
-            <div style={{ textAlign: 'center', cursor: 'pointer', color: '#ccc' }}>
-              <div style={{ fontSize: '20px' }}>🧭</div>
-              <div style={{ fontSize: '11px', marginTop: '4px' }}>탐색</div>
-            </div>
-            <div style={{ textAlign: 'center', cursor: 'pointer', color: '#9b59b6' }}>
-              <div style={{ fontSize: '20px' }}>🛒</div>
-              <div style={{ fontSize: '11px', fontWeight: 'bold', marginTop: '4px' }}>장바구니</div>
-            </div>
-          </div>
         </div>
+
+        <Navigation />
 
       </div>
     </div>
