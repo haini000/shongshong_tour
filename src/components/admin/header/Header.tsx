@@ -1,4 +1,4 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Navigate 삭제
 import "./Header.scss";
 
 const Header = () => {

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { Home, Compass, ShoppingCart, ChevronLeft, X, User } from 'lucide-react'; 
 import { useNavigate } from 'react-router-dom';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -53,7 +52,7 @@ export default function Cart() {
 
   return (
     <div style={{ backgroundColor: '#f8faff', minHeight: '100vh', display: 'flex', justifyContent: 'center', fontFamily: 'sans-serif' }}>
-      <div style={{ width: '100%', maxWidth: '#430px', backgroundColor: 'white', position: 'relative', display: 'flex', flexDirection: 'column', boxShadow: '0 0 30px rgba(0,0,0,0.05)' }}>
+      <div style={{ width: '100%', maxWidth: '430px', backgroundColor: 'white', position: 'relative', display: 'flex', flexDirection: 'column', boxShadow: '0 0 30px rgba(0,0,0,0.05)' }}>
         
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px', alignItems: 'center' }}>
           <span style={{ color: '#5dade2', fontSize: '26px', fontFamily: '"Pacifico", cursive' }}>
@@ -61,9 +60,9 @@ export default function Cart() {
           </span>
           <div style={{ 
             width: '36px', height: '36px', borderRadius: '50%', backgroundColor: '#f0f7ff', 
-            display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#5dade2' 
+            display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#5dade2', fontSize: '12px', fontWeight: 'bold'
           }}>
-            <User size={20} />
+            MY
           </div>
         </div>
 
@@ -74,9 +73,9 @@ export default function Cart() {
               style={{ 
                 backgroundColor: '#5dade2', color: 'white', width: '38px', height: '38px', borderRadius: '50%', 
                 display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer',
-                boxShadow: '0 4px 10px rgba(93, 173, 226, 0.3)'
+                boxShadow: '0 4px 10px rgba(93, 173, 226, 0.3)', fontSize: '20px', fontWeight: 'bold'
               }}>
-              <ChevronLeft size={22} strokeWidth={2.5} />
+              &lt;
             </div>
             <h2 style={{ margin: 0, fontSize: '24px', fontWeight: '800', color: '#333' }}>장바구니</h2>
           </div>
@@ -86,7 +85,7 @@ export default function Cart() {
         <div style={{ padding: '0 20px', flex: 1, overflowY: 'auto', paddingBottom: '240px' }}>
           {cartItems.length === 0 ? (
             <div style={{ textAlign: 'center', marginTop: '100px', color: '#bbb' }}>
-              <ShoppingCart size={48} color="#eee" style={{ marginBottom: '15px' }} />
+              <div style={{ fontSize: '48px', marginBottom: '15px' }}>🛒</div>
               <p>장바구니가 비어있습니다.</p>
             </div>
           ) : (
@@ -102,7 +101,7 @@ export default function Cart() {
                 <div style={{ marginLeft: '18px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <b style={{ fontSize: '17px', color: '#1a1a1a' }}>{item.Product?.product_name}</b>
-                    <X size={18} color="#ccc" style={{ cursor: 'pointer' }} onClick={() => deleteItem(item.cart_id)} />
+                    <span style={{ cursor: 'pointer', color: '#ccc', fontSize: '18px', fontWeight: 'bold' }} onClick={() => deleteItem(item.cart_id)}>×</span>
                   </div>
                   <div style={{ marginTop: '10px', fontSize: '14px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
@@ -134,15 +133,15 @@ export default function Cart() {
 
           <div style={{ height: '75px', display: 'flex', justifyContent: 'space-around', alignItems: 'center', paddingBottom: '10px' }}>
             <div onClick={() => navigate('/')} style={{ textAlign: 'center', cursor: 'pointer', color: '#ccc' }}>
-              <Home size={24} strokeWidth={1.5} />
+              <div style={{ fontSize: '20px' }}>🏠</div>
               <div style={{ fontSize: '11px', marginTop: '4px' }}>홈</div>
             </div>
             <div style={{ textAlign: 'center', cursor: 'pointer', color: '#ccc' }}>
-              <Compass size={24} strokeWidth={1.5} />
+              <div style={{ fontSize: '20px' }}>🧭</div>
               <div style={{ fontSize: '11px', marginTop: '4px' }}>탐색</div>
             </div>
             <div style={{ textAlign: 'center', cursor: 'pointer', color: '#9b59b6' }}>
-              <ShoppingCart size={24} strokeWidth={2.5} />
+              <div style={{ fontSize: '20px' }}>🛒</div>
               <div style={{ fontSize: '11px', fontWeight: 'bold', marginTop: '4px' }}>장바구니</div>
             </div>
           </div>
