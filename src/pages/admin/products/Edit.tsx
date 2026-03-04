@@ -3,12 +3,13 @@
 * 담당자: 김두현
 * 역할: 관리자 상품 수정 및 UI 구현
 * 생성일: 2026-02-19
-* 최종 수정일: 2026-03-03
+* 최종 수정일: 2026-03-04
 */
 
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../../lib/supabase";
+import { Helmet } from "react-helmet-async";
 import CategorySelector, { type Category } from "../../../components/admin/category/CategorySelector";
 import "./Edit.scss";
 
@@ -174,126 +175,132 @@ const Edit = () => {
 
 
   return (
-    <div className="product-edit">
-      <div className="edit-container">
-        <div className="page-header">
-          <button
-            type="button"
-            className="back-btn"
-            onClick={() => navigate(-1)}
-          >
-            <span className="material-icons">chevron_left</span>
-          </button>
-          <div>
-            <h1>상품 정보 수정</h1>
-            <p>등록된 기존 정보를 확인하고 수정해주세요.</p>
-          </div>
-        </div>
-
-        <form onSubmit={handleUpdate}>
-          <label htmlFor="name">대표 이미지</label>
-          {(preview || imageUrl) && (
-            <img
-              src={preview || imageUrl || ""}
-              alt={preview ? "새 이미지 미리보기" : "현재 이미지"}
-              className="edit-preview"
-            />
-          )}
-
-          <div className="image-edit-box">
-            <input
-              type="file"
-              accept="image/png, image/jpeg"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-
-                if (file) {
-                  setNewImage(file);
-                  setPreview(URL.createObjectURL(file));
-                } else {
-                  setNewImage(null);
-                  setPreview(null);
-                }
-              }}
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="name">상품명</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-
-          <CategorySelector
-            categories={categories}
-            setCategories={setCategories}
-            selectedCategoryIds={selectedCategories}
-            setSelectedCategoryIds={setSelectedCategories}
-            label="카테고리"
-          />
-
-          <div className="row">
-            <div className="form-group">
-              <label htmlFor="price">판매 가격</label>
-              <input
-                id="price"
-                type="number"
-                min="1"
-                value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="date">기간</label>
-              <input
-                id="date"
-                type="date"
-                min={minTravelDate}
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="name">상품 요약 설명</label>
-            <textarea
-              value={desc}
-              onChange={(e) => setDesc(e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="stock">재고 수량</label>
-            <input
-              id="stock"
-              type="number"
-              min="1"
-              value={stock}
-              onChange={(e) => setStock(Number(e.target.value))}
-            />
-          </div>
-
-          <div className="button-group">
+    <>
+      <Helmet>
+        <title>관리자 상품 수정</title>
+        <meta name="description" content="슝슝투어 관리자 상품 수정" />
+      </Helmet>
+      <div className="product-edit">
+        <div className="edit-container">
+          <div className="page-header">
             <button
               type="button"
-              className="cancel-btn"
+              className="back-btn"
               onClick={() => navigate(-1)}
             >
-              취소
+              <span className="material-icons">chevron_left</span>
             </button>
-
-            <button type="submit" className="submit-btn">
-              수정 완료
-            </button>
+            <div>
+              <h1>상품 정보 수정</h1>
+              <p>등록된 기존 정보를 확인하고 수정해주세요.</p>
+            </div>
           </div>
-        </form>
+
+          <form onSubmit={handleUpdate}>
+            <label htmlFor="name">대표 이미지</label>
+            {(preview || imageUrl) && (
+              <img
+                src={preview || imageUrl || ""}
+                alt={preview ? "새 이미지 미리보기" : "현재 이미지"}
+                className="edit-preview"
+              />
+            )}
+
+            <div className="image-edit-box">
+              <input
+                type="file"
+                accept="image/png, image/jpeg"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+
+                  if (file) {
+                    setNewImage(file);
+                    setPreview(URL.createObjectURL(file));
+                  } else {
+                    setNewImage(null);
+                    setPreview(null);
+                  }
+                }}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="name">상품명</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <CategorySelector
+              categories={categories}
+              setCategories={setCategories}
+              selectedCategoryIds={selectedCategories}
+              setSelectedCategoryIds={setSelectedCategories}
+              label="카테고리"
+            />
+
+            <div className="row">
+              <div className="form-group">
+                <label htmlFor="price">판매 가격</label>
+                <input
+                  id="price"
+                  type="number"
+                  min="1"
+                  value={price}
+                  onChange={(e) => setPrice(Number(e.target.value))}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="date">기간</label>
+                <input
+                  id="date"
+                  type="date"
+                  min={minTravelDate}
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="name">상품 요약 설명</label>
+              <textarea
+                value={desc}
+                onChange={(e) => setDesc(e.target.value)}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="stock">재고 수량</label>
+              <input
+                id="stock"
+                type="number"
+                min="1"
+                value={stock}
+                onChange={(e) => setStock(Number(e.target.value))}
+              />
+            </div>
+
+            <div className="button-group">
+              <button
+                type="button"
+                className="cancel-btn"
+                onClick={() => navigate(-1)}
+              >
+                취소
+              </button>
+
+              <button type="submit" className="submit-btn">
+                수정 완료
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
