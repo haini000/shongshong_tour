@@ -12,6 +12,8 @@ const Login = () => {
   const [kakaoLoading, setKakaoLoading] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
+
     const checkSessionAndRedirect = async () => {
       const { data: { session } } = await supabase.auth.getSession();
 
@@ -20,7 +22,11 @@ const Login = () => {
       }
     };
 
-    checkSessionAndRedirect();
+    void checkSessionAndRedirect ();
+
+    return () => {
+      isMounted = false;
+    };
   }, [navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
