@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../../lib/supabase";
 import "./Login.scss";
@@ -10,6 +10,19 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [kakaoLoading, setKakaoLoading] = useState(false);
+
+  useEffect(() => {
+
+    const checkSessionAndRedirect = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (session) {
+        navigate("/mypage");
+      }
+    };
+
+    void checkSessionAndRedirect ();
+  }, [navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

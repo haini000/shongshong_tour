@@ -87,22 +87,6 @@ export default function Join() {
     if (data.user) {
       alert("회원가입 성공! 이메일을 확인해주세요.");
       
-      // user 테이블에 추가 정보 저장 
-      // (인증 전이라도 UID는 생성되므로 테이블 저장은 시도합니다)
-      const { error: insertError } = await supabase
-        .from("User")
-        .insert([
-          {
-            user_id: data.user.id,
-            user_name: form.name,
-            user_email: email,
-            user_role: "USER",
-          },
-        ]);
-
-      if (insertError) {
-        console.error("프로필 저장 실패:", insertError.message);
-      }
       navigate("/login"); 
     }
   };
