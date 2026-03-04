@@ -69,10 +69,8 @@ const Mypage = () => {
               <span className="material-icons">edit</span>
             </button>
           </div>
-          <h2 className="welcome-text">___님 반갑습니다</h2>
+          <h2 className="welcome-text">{userName}님 반갑습니다</h2>
         </div>
-        <h2 className="welcome-text">{userName}님 반갑습니다</h2>
-      </div>
 
       <div className="mypage-actions">
         <button type="button" className="action-card primary large" onClick={() => navigate('/cart')}>
@@ -83,22 +81,15 @@ const Mypage = () => {
           <span className="material-icons">edit</span>
           <span>리뷰관리</span>
         </button>
-
+        <div className="action-row">
+          <button type="button" className="action-card secondary small">
+            <span className="material-icons">manage_accounts</span>
+            <span>개인정보 수정</span>
+          </button>
           <button type="button" className="action-card secondary outline small" onClick={handleLogout}>
             <span className="material-icons">logout</span>
             <span>로그아웃</span>
           </button>
-
-          <div className="action-row">
-            <button type="button" className="action-card secondary small">
-              <span className="material-icons">manage_accounts</span>
-              <span>개인정보 수정</span>
-            </button>
-            <button type="button" className="action-card secondary outline small">
-              <span className="material-icons">logout</span>
-              <span>로그아웃</span>
-            </button>
-          </div>
         </div>
 
         <div className="mypage-summary">
@@ -112,6 +103,7 @@ const Mypage = () => {
             <strong className="value">3</strong>
           </div>
         </div>
+      </div>
       </section>
     </>
   );
