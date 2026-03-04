@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../../../lib/supabase";
+import { Helmet } from "react-helmet-async";
 
 interface Product {
   product_number: number;
@@ -77,17 +78,23 @@ const Products = () => {
   };
 
   return (
-    <div className="main-content">
-      <h1>{product.product_name}</h1>
-      <p>{product.product_price}원</p>
-      <p>{product.product_desc}</p>
-      <p>출발일: {product.travel_date}</p>
-      <p>정원: {product.product_stock}명</p>
+    <>
+      <Helmet>
+        <title>상품 상세</title>
+        <meta name="description" content="슝슝투어 상품 상세" />
+      </Helmet>
+      <div className="main-content">
+        <h1>{product.product_name}</h1>
+        <p>{product.product_price}원</p>
+        <p>{product.product_desc}</p>
+        <p>출발일: {product.travel_date}</p>
+        <p>정원: {product.product_stock}명</p>
 
-      <button onClick={handleAddToCart} disabled={adding}>
-        {adding ? "담는 중..." : "장바구니 담기"}
-      </button>
-    </div>
+        <button onClick={handleAddToCart} disabled={adding}>
+          {adding ? "담는 중..." : "장바구니 담기"}
+        </button>
+      </div>
+    </>
   );
 };
 
