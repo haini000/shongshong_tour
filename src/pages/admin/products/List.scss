@@ -101,6 +101,9 @@
 }
 
 .admin-product-card {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 14px;
+  display: grid;
   background: #fff;
   border-radius: 16px;
   overflow: hidden;
