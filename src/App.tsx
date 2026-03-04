@@ -10,6 +10,7 @@ import Join from "./pages/user/auth/join/Join";
 import Product from "./pages/user/products/Product";
 import Cart from "./pages/user/cart/Cart";
 import Checkout from "./pages/user/checkout/Checkout";
+import Mypage from "./pages/user/mypage/Mypage";
 
 /* 관리자 관련 페이지 */
 
@@ -31,6 +32,7 @@ function App() {
         <Route path="product/:productNumber" element={<Product/>}/>
         <Route path="cart" element={<Cart />}/>
         <Route path="checkout" element={<Checkout />}/>
+        <Route path="mypage" element={<Mypage />}/>
       </Route>
 
       {/* 관리자 페이지 */}
