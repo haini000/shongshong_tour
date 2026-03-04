@@ -3,12 +3,13 @@
 * 담당자: 김두현
 * 역할: 관리자 상품 목록 및 UI 구현
 * 생성일: 2026-02-20
-* 최종 수정일: 2026-03-01
+* 최종 수정일: 2026-03-04
 */
 
 import { useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabase";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import "../../../components/common.scss";
 import "./List.scss";
 
@@ -120,156 +121,162 @@ const List = () => {
   };
 
   return (
-    <div className="admin-product-page">
-      <div className="list-top">
-        <div className="list-title-group">
-          <button
-            type="button"
-            className="list-back-btn"
-            onClick={() => navigate(-1)}
-            aria-label="뒤로가기"
-          >
-            <span className="material-icons">chevron_left</span>
-          </button>
-
-          <div>
-            <h2 className="admin-tt">상품 관리</h2>
-            <p className="list-count admin-list-desc">
-              총 <strong>{filteredProducts.length}</strong>개의 여행 상품
-            </p>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          className="list-add-btn"
-          onClick={() => navigate("/admin/products/new")}
-        >
-          상품 추가 <span className="material-icons">add</span>
-        </button>
-      </div>
-
-      <label className="list-search">
-        <span className="material-icons">search</span>
-        <input
-          type="text"
-          className="admin-desc"
-          placeholder="상품 검색"
-          value={searchKeyword}
-          onChange={(e) => setSearchKeyword(e.target.value)}
-        />
-      </label>
-
-      <div className="admin-product-list">
-        {paginatedProducts.map((product) => (
-          <div
-            key={product.product_number}
-            className="admin-product-card"
-          >
-            <img
-              src={product.product_image || "/default.jpg"}
-              alt={product.product_name}
-              className="product-image"
-            />
-
-            <div className="card-content">
-              <div className="card-texts">
-                <a
-                  href={`/product/${product.product_number}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="card-title-link"
-                >
-                  <h3>{product.product_name}</h3>
-                </a>
-                <p className="description admin-desc">
-                  {product.product_desc?.trim() ||
-                    product.product_description?.trim() ||
-                    "상품 설명이 없습니다."}
-                </p>
-              </div>
-
-              <div className="card-actions">
-                <button
-                  className="action-btn"
-                  onClick={() =>
-                    navigate(`/admin/products/${product.product_number}/edit`)}
-                  aria-label="상품 편집"
-                >
-                  <span className="material-icons">edit</span>
-                </button>
-                <button
-                  className="action-btn"
-                  onClick={() => handleDelete(product.product_number)}
-                  aria-label="상품 삭제"
-                >
-                  <span className="material-icons">delete</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="pagination-wrap">
-        <div className="pagination">
-          {currentPage > 1 ? (
+    <>
+      <Helmet>
+        <title>관리자 상품 수정</title>
+        <meta name="description" content="슝슝투어 관리자 상품 수정" />
+      </Helmet>
+      <div className="admin-product-page">
+        <div className="list-top">
+          <div className="list-title-group">
             <button
-              className="page-arrow"
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              aria-label="previous page"
+              type="button"
+              className="list-back-btn"
+              onClick={() => navigate(-1)}
+              aria-label="뒤로가기"
             >
               <span className="material-icons">chevron_left</span>
             </button>
-          ) : (
-            <span className="page-arrow page-arrow-placeholder" aria-hidden="true" />
-          )}
 
-          {getVisiblePages().map((page, idx) => {
-            if (page === "ellipsis") {
-              return (
-                <span key={`ellipsis-${idx}`} className="pagination-ellipsis">
-                  ...
-                </span>
-              );
-            }
+            <div>
+              <h2 className="admin-tt">상품 관리</h2>
+              <p className="list-count admin-list-desc">
+                총 <strong>{filteredProducts.length}</strong>개의 여행 상품
+              </p>
+            </div>
+          </div>
 
-            return (
-              <button
-                key={page}
-                className={`page-btn ${currentPage === page ? "active" : ""}`}
-                onClick={() => setCurrentPage(page)}
-              >
-                {page}
-              </button>
-            );
-          })}
-
-          {currentPage < totalPages ? (
-            <button
-              className="page-arrow"
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-              aria-label="next page"
-            >
-              <span className="material-icons">chevron_right</span>
-            </button>
-          ) : (
-            <span className="page-arrow page-arrow-placeholder" aria-hidden="true" />
-          )}
+          <button
+            type="button"
+            className="list-add-btn"
+            onClick={() => navigate("/admin/products/new")}
+          >
+            상품 추가 <span className="material-icons">add</span>
+          </button>
         </div>
-      </div>
 
-      {showScrollTopBtn && (
-        <button
-          type="button"
-          className="scroll-top-btn"
-          onClick={handleScrollTop}
-          aria-label="맨 위로 이동"
-        >
-          <span className="material-icons">expand_less</span>
-        </button>
-      )}
-    </div>
+        <label className="list-search">
+          <span className="material-icons">search</span>
+          <input
+            type="text"
+            className="admin-desc"
+            placeholder="상품 검색"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+          />
+        </label>
+
+        <div className="admin-product-list">
+          {paginatedProducts.map((product) => (
+            <div
+              key={product.product_number}
+              className="admin-product-card"
+            >
+              <img
+                src={product.product_image || "/default.jpg"}
+                alt={product.product_name}
+                className="product-image"
+              />
+
+              <div className="card-content">
+                <div className="card-texts">
+                  <a
+                    href={`/product/${product.product_number}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="card-title-link"
+                  >
+                    <h3>{product.product_name}</h3>
+                  </a>
+                  <p className="description admin-desc">
+                    {product.product_desc?.trim() ||
+                      product.product_description?.trim() ||
+                      "상품 설명이 없습니다."}
+                  </p>
+                </div>
+
+                <div className="card-actions">
+                  <button
+                    className="action-btn"
+                    onClick={() =>
+                      navigate(`/admin/products/${product.product_number}/edit`)}
+                    aria-label="상품 편집"
+                  >
+                    <span className="material-icons">edit</span>
+                  </button>
+                  <button
+                    className="action-btn"
+                    onClick={() => handleDelete(product.product_number)}
+                    aria-label="상품 삭제"
+                  >
+                    <span className="material-icons">delete</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="pagination-wrap">
+          <div className="pagination">
+            {currentPage > 1 ? (
+              <button
+                className="page-arrow"
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                aria-label="previous page"
+              >
+                <span className="material-icons">chevron_left</span>
+              </button>
+            ) : (
+              <span className="page-arrow page-arrow-placeholder" aria-hidden="true" />
+            )}
+
+            {getVisiblePages().map((page, idx) => {
+              if (page === "ellipsis") {
+                return (
+                  <span key={`ellipsis-${idx}`} className="pagination-ellipsis">
+                    ...
+                  </span>
+                );
+              }
+
+              return (
+                <button
+                  key={page}
+                  className={`page-btn ${currentPage === page ? "active" : ""}`}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </button>
+              );
+            })}
+
+            {currentPage < totalPages ? (
+              <button
+                className="page-arrow"
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                aria-label="next page"
+              >
+                <span className="material-icons">chevron_right</span>
+              </button>
+            ) : (
+              <span className="page-arrow page-arrow-placeholder" aria-hidden="true" />
+            )}
+          </div>
+        </div>
+
+        {showScrollTopBtn && (
+          <button
+            type="button"
+            className="scroll-top-btn"
+            onClick={handleScrollTop}
+            aria-label="맨 위로 이동"
+          >
+            <span className="material-icons">expand_less</span>
+          </button>
+        )}
+      </div>
+    </>
   );
 };
 

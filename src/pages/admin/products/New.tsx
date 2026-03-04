@@ -3,12 +3,13 @@
 * 담당자: 김두현
 * 역할: 관리자 상품 등록 및 UI 구현
 * 생성일: 2026-02-19
-* 최종 수정일: 2026-03-01
+* 최종 수정일: 2026-03-04
 */
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../lib/supabase";
+import { Helmet } from "react-helmet-async";
 import CategorySelector, { type Category } from "../../../components/admin/category/CategorySelector";
 import "../../../components/common.scss";
 import "./New.scss";
@@ -252,142 +253,148 @@ const New = () => {
   };
 
   return (
-    <div className="product-create">
-      <div className="page-header">
-        <button
-          type="button"
-          className="back-btn"
-          onClick={() => navigate(-1)}
-        >
-          <span className="material-icons">chevron_left</span>
-        </button>
+    <>
+      <Helmet>
+        <title>관리자 상품 등록</title>
+        <meta name="description" content="슝슝투어 관리자 상품 등록" />
+      </Helmet>
+      <div className="product-create">
+        <div className="page-header">
+          <button
+            type="button"
+            className="back-btn"
+            onClick={() => navigate(-1)}
+          >
+            <span className="material-icons">chevron_left</span>
+          </button>
 
-        <div>
-          <h1 className="title admin-tt">새로운 여행 상품 등록</h1>
-          <p className="subtitle admin-list-desc">
-            관리자님, 숑숑투어의 새로운 모델을 추가해주세요.
-          </p>
-        </div>
-      </div>
-
-      <form onSubmit={handleSubmit}>
-        <label className="admin-sub">대표 이미지</label>
-        <div className="form-group image-group image-upload-box">
-          <input
-            type="file"
-            accept="image/png, image/jpeg"
-            onChange={(e) => {
-              if (e.target.files) {
-                const file = e.target.files[0];
-                setImage(file);
-                setPreview(URL.createObjectURL(file));
-              }
-            }}
-          />
-
-          {preview ? (
-            <img src={preview} className="image-preview" alt="미리보기" />
-          ) : (
-            <div className="image-placeholder">
-              <span className="material-icons">add_a_photo</span>
-              <p className="admin-product">이미지 업로드</p>
-              <small className="admin-iamge">PNG, JPG (최대 10MB)</small>
-            </div>
-          )}
-        </div>
-        {errors.image && <p className="error">{errors.image}</p>}
-
-        <div className="form-group">
-          <label className="admin-sub">상품명</label>
-          <input
-            type="text"
-            className="admin-desc"
-            placeholder="예: 제주도 3박 4일 힐링 패키지"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          {errors.name && <p className="error">{errors.name}</p>}
+          <div>
+            <h1 className="title admin-tt">새로운 여행 상품 등록</h1>
+            <p className="subtitle admin-list-desc">
+              관리자님, 숑숑투어의 새로운 모델을 추가해주세요.
+            </p>
+          </div>
         </div>
 
-        <CategorySelector
-          categories={categories}
-          setCategories={setCategories}
-          selectedCategoryIds={selectedCategoryIds}
-          setSelectedCategoryIds={setSelectedCategoryIds}
-        />
+        <form onSubmit={handleSubmit}>
+          <label className="admin-sub">대표 이미지</label>
+          <div className="form-group image-group image-upload-box">
+            <input
+              type="file"
+              accept="image/png, image/jpeg"
+              onChange={(e) => {
+                if (e.target.files) {
+                  const file = e.target.files[0];
+                  setImage(file);
+                  setPreview(URL.createObjectURL(file));
+                }
+              }}
+            />
 
-        <div className="row">
+            {preview ? (
+              <img src={preview} className="image-preview" alt="미리보기" />
+            ) : (
+              <div className="image-placeholder">
+                <span className="material-icons">add_a_photo</span>
+                <p className="admin-product">이미지 업로드</p>
+                <small className="admin-iamge">PNG, JPG (최대 10MB)</small>
+              </div>
+            )}
+          </div>
+          {errors.image && <p className="error">{errors.image}</p>}
+
           <div className="form-group">
-            <label className="admin-sub">상품 가격 (원)</label>
+            <label className="admin-sub">상품명</label>
+            <input
+              type="text"
+              className="admin-desc"
+              placeholder="예: 제주도 3박 4일 힐링 패키지"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            {errors.name && <p className="error">{errors.name}</p>}
+          </div>
+
+          <CategorySelector
+            categories={categories}
+            setCategories={setCategories}
+            selectedCategoryIds={selectedCategoryIds}
+            setSelectedCategoryIds={setSelectedCategoryIds}
+          />
+
+          <div className="row">
+            <div className="form-group">
+              <label className="admin-sub">상품 가격 (원)</label>
+              <input
+                type="number"
+                min="1"
+                className="admin-desc"
+                onChange={(e) => setPrice(Number(e.target.value))}
+              />
+              {errors.price && <p className="error">{errors.price}</p>}
+            </div>
+
+            <div className="form-group">
+              <label className="admin-sub">출발일</label>
+              <input
+                type="date"
+                min={minTravelDate}
+                className="admin-desc"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
+              {errors.date && <p className="error">{errors.date}</p>}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <div className="desc-label">
+              <label className="admin-sub" htmlFor="product-desc">상세 설명</label>
+              <button
+                type="button"
+                className="ai-badge admin-desc"
+                title="상품명, 상품가격, 출발일을 지정하여 상세 설명을 생성합니다."
+                onClick={(e) => {
+                  e.stopPropagation();
+                  void handleGenerateDesc();
+                }}
+                disabled={isGenerating}
+                aria-label="AI로 설명 생성"
+              >
+                {isGenerating ? "AI…" : "AI"}
+              </button>
+            </div>
+
+            <textarea
+              id="product-desc"
+              value={desc}
+              className="admin-desc"
+              placeholder="여행 상품에 대한 매력적인 설명을 작성해 주세요."
+              onChange={(e) => setDesc(e.target.value)}
+            />
+
+            {aiError && <p className="error">{aiError}</p>}
+            {errors.desc && <p className="error">{errors.desc}</p>}
+          </div>
+
+
+          <div className="form-group">
+            <label className="admin-sub">정원</label>
             <input
               type="number"
               min="1"
               className="admin-desc"
-              onChange={(e) => setPrice(Number(e.target.value))}
+              onChange={(e) => setStock(Number(e.target.value))}
             />
-            {errors.price && <p className="error">{errors.price}</p>}
+            {errors.stock && <p className="error">{errors.stock}</p>}
           </div>
 
-          <div className="form-group">
-            <label className="admin-sub">출발일</label>
-            <input
-              type="date"
-              min={minTravelDate}
-              className="admin-desc"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-            {errors.date && <p className="error">{errors.date}</p>}
-          </div>
-        </div>
-
-        <div className="form-group">
-          <div className="desc-label">
-            <label className="admin-sub" htmlFor="product-desc">상세 설명</label>
-            <button
-              type="button"
-              className="ai-badge admin-desc"
-              title="상품명, 상품가격, 출발일을 지정하여 상세 설명을 생성합니다."
-              onClick={(e) => {
-                e.stopPropagation();
-                void handleGenerateDesc();
-              }}
-              disabled={isGenerating}
-              aria-label="AI로 설명 생성"
-            >
-              {isGenerating ? "AI…" : "AI"}
-            </button>
-          </div>
-
-          <textarea
-            id="product-desc"
-            value={desc}
-            className="admin-desc"
-            placeholder="여행 상품에 대한 매력적인 설명을 작성해 주세요."
-            onChange={(e) => setDesc(e.target.value)}
-          />
-
-          {aiError && <p className="error">{aiError}</p>}
-          {errors.desc && <p className="error">{errors.desc}</p>}
-        </div>
-
-
-        <div className="form-group">
-          <label className="admin-sub">정원</label>
-          <input
-            type="number"
-            min="1"
-            className="admin-desc"
-            onChange={(e) => setStock(Number(e.target.value))}
-          />
-          {errors.stock && <p className="error">{errors.stock}</p>}
-        </div>
-
-        <button type="submit" className="submit-btn">
-          상품 등록 완료하기 <span className="material-icons">add_circle</span>
-        </button>
-      </form>
-    </div>
+          <button type="submit" className="submit-btn">
+            상품 등록 완료하기 <span className="material-icons">add_circle</span>
+          </button>
+        </form>
+      </div>
+    </>
   );
 };
 

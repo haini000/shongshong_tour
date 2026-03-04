@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, type FormEvent } from "react";
 import { supabase } from "../../../../lib/supabase"; 
+import { Helmet } from "react-helmet-async";
 import "./Join.scss";
 
 export default function Join() {
@@ -92,123 +93,129 @@ export default function Join() {
   };
 
   return (
-    <div className="join">
-      <div className="join__title">
-        <button
-          type="button"
-          className="back-btn"
-          onClick={() => navigate(-1)}
-        >
-          <span className="material-icons">chevron_left</span>
-        </button>
-        <div>
-          <h1>회원가입</h1>
-          <p>숭숭투어와 함께 특별한 여행을 시작하세요.</p>
-        </div>
-      </div>
-
-      <form className="join__form" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>이름</label>
-          <div className="input-wrap">
-            <input
-              type="text"
-              placeholder=" "
-              value={form.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-            />
-            <span className="float-placeholder">이름을 입력해 주세요</span>
+    <>
+      <Helmet>
+        <title>회원가입</title>
+        <meta name="description" content="슝슝투어 회원가입" />
+      </Helmet>
+      <div className="join">
+        <div className="join__title">
+          <button
+            type="button"
+            className="back-btn"
+            onClick={() => navigate(-1)}
+          >
+            <span className="material-icons">chevron_left</span>
+          </button>
+          <div>
+            <h1>회원가입</h1>
+            <p>숭숭투어와 함께 특별한 여행을 시작하세요.</p>
           </div>
-          {errors.name && <span className="error">{errors.name}</span>}
         </div>
 
-        <div className="form-group">
-          <label>아이디</label>
-          <div className="input-wrap">
-            <input
-              type="text"
-              placeholder=" "
-              value={form.userId}
-              onChange={(e) => handleChange("userId", e.target.value)}
-            />
-            <span className="float-placeholder">아이디를 입력해 주세요</span>
-          </div>
-          {errors.userId && <span className="error">{errors.userId}</span>}
-        </div>
-
-        <div className="form-group">
-          <label>비밀번호</label>
-          <div className="input-wrap">
-            <input
-              type="password"
-              placeholder=" "
-              value={form.password}
-              onChange={(e) => handleChange("password", e.target.value)}
-            />
-            <span className="float-placeholder">영문, 숫자 조합 8자 이상</span>
-          </div>
-          {errors.password && <span className="error">{errors.password}</span>}
-        </div>
-
-        <div className="form-group">
-          <label>비밀번호 확인</label>
-          <div className="input-wrap">
-            <input
-              type="password"
-              placeholder=" "
-              value={form.passwordConfirm}
-              onChange={(e) => handleChange("passwordConfirm", e.target.value)}
-            />
-            <span className="float-placeholder">
-              비밀번호를 한번 더 입력해 주세요
-            </span>
-          </div>
-          {errors.passwordConfirm && (
-            <span className="error">{errors.passwordConfirm}</span>
-          )}
-        </div>
-
-        <div className="form-group">
-          <label>이메일</label>
-          <div className="email-box">
+        <form className="join__form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>이름</label>
             <div className="input-wrap">
               <input
                 type="text"
                 placeholder=" "
-                value={form.emailId}
-                onChange={(e) => handleChange("emailId", e.target.value)}
+                value={form.name}
+                onChange={(e) => handleChange("name", e.target.value)}
               />
-              <span className="float-placeholder">이메일</span>
+              <span className="float-placeholder">이름을 입력해 주세요</span>
             </div>
-            <span className="at">@</span>
+            {errors.name && <span className="error">{errors.name}</span>}
+          </div>
+
+          <div className="form-group">
+            <label>아이디</label>
             <div className="input-wrap">
               <input
                 type="text"
                 placeholder=" "
-                value={form.emailDomain}
-                onChange={(e) => handleChange("emailDomain", e.target.value)}
+                value={form.userId}
+                onChange={(e) => handleChange("userId", e.target.value)}
               />
-              <span className="float-placeholder">도메인</span>
+              <span className="float-placeholder">아이디를 입력해 주세요</span>
             </div>
+            {errors.userId && <span className="error">{errors.userId}</span>}
           </div>
-          {errors.email && <span className="error">{errors.email}</span>}
-        </div>
 
-        <p className="agreement">
-          가입 시 슝슝투어의 <span>이용약관</span> 및 <span>개인정보 처리방침</span>에 동의하게 됩니다.
-        </p>
+          <div className="form-group">
+            <label>비밀번호</label>
+            <div className="input-wrap">
+              <input
+                type="password"
+                placeholder=" "
+                value={form.password}
+                onChange={(e) => handleChange("password", e.target.value)}
+              />
+              <span className="float-placeholder">영문, 숫자 조합 8자 이상</span>
+            </div>
+            {errors.password && <span className="error">{errors.password}</span>}
+          </div>
 
-        <button type="submit" className="join-btn">회원가입 완료</button>
-      </form>
+          <div className="form-group">
+            <label>비밀번호 확인</label>
+            <div className="input-wrap">
+              <input
+                type="password"
+                placeholder=" "
+                value={form.passwordConfirm}
+                onChange={(e) => handleChange("passwordConfirm", e.target.value)}
+              />
+              <span className="float-placeholder">
+                비밀번호를 한번 더 입력해 주세요
+              </span>
+            </div>
+            {errors.passwordConfirm && (
+              <span className="error">{errors.passwordConfirm}</span>
+            )}
+          </div>
 
-      <div className="join__sns">
-        <p>간편 가입</p>
-        <div className="sns-icons">
-          <div className="sns n">N</div>
-          <div className="sns k">K</div>
-          <div className="sns g">G</div>
+          <div className="form-group">
+            <label>이메일</label>
+            <div className="email-box">
+              <div className="input-wrap">
+                <input
+                  type="text"
+                  placeholder=" "
+                  value={form.emailId}
+                  onChange={(e) => handleChange("emailId", e.target.value)}
+                />
+                <span className="float-placeholder">이메일</span>
+              </div>
+              <span className="at">@</span>
+              <div className="input-wrap">
+                <input
+                  type="text"
+                  placeholder=" "
+                  value={form.emailDomain}
+                  onChange={(e) => handleChange("emailDomain", e.target.value)}
+                />
+                <span className="float-placeholder">도메인</span>
+              </div>
+            </div>
+            {errors.email && <span className="error">{errors.email}</span>}
+          </div>
+
+          <p className="agreement">
+            가입 시 슝슝투어의 <span>이용약관</span> 및 <span>개인정보 처리방침</span>에 동의하게 됩니다.
+          </p>
+
+          <button type="submit" className="join-btn">회원가입 완료</button>
+        </form>
+
+        <div className="join__sns">
+          <p>간편 가입</p>
+          <div className="sns-icons">
+            <div className="sns n">N</div>
+            <div className="sns k">K</div>
+            <div className="sns g">G</div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
