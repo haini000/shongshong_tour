@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState, type FormEvent } from "react";
+import { supabase } from "../../../../lib/supabase"; 
 import "./Join.scss";
 
 export default function Join() {
@@ -64,11 +65,46 @@ export default function Join() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
 
-    console.log("회원가입 폼 데이터", form);
+    const email = `${form.emailId}@${form.emailDomain}`;
+
+    // Auth 계정 생성
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password: form.password,
+    });
+
+    if (error) {
+      // 가입 실패 시 경고창
+      alert("실패: " + error.message);
+      return;
+    }
+
+    // 회원가입 성공 및 이메일 확인 안내 (요청하신 부분)
+    if (data.user) {
+      alert("회원가입 성공! 이메일을 확인해주세요.");
+      
+      // user 테이블에 추가 정보 저장 
+      // (인증 전이라도 UID는 생성되므로 테이블 저장은 시도합니다)
+      const { error: insertError } = await supabase
+        .from("User")
+        .insert([
+          {
+            user_id: data.user.id,
+            user_name: form.name,
+            user_email: email,
+            user_role: "USER",
+          },
+        ]);
+
+      if (insertError) {
+        console.error("프로필 저장 실패:", insertError.message);
+      }
+      navigate("/login"); 
+    }
   };
 
   return (
