@@ -186,6 +186,11 @@ const New = () => {
       setAiError("상품명을 먼저 입력해주세요.");
       return;
     }
+    
+    if (selectedCategoryIds.length === 0) {
+      setAiError("카테고리를 먼저 설정해주세요.");
+      return;
+    }
 
     if (!price || price <= 0) {
       setAiError("가격을 먼저 입력해주세요.");
@@ -200,14 +205,29 @@ const New = () => {
     setIsGenerating(true);
 
     const prompt = `
-      여행 상품 정보를 기반으로 매력적인 상품 설명을 작성해주세요.
+      여행 상품 정보를 기반으로 매력적인 여행 상품 설명을 작성해주세요.
+
+      [상품 정보]
       - 상품명: ${name}
+      - 카테고리: ${selectedCategoryIds}
       - 가격: ${price}
-      - 여행기간: ${date}
-      - 300자 이내
-      - 고객이 예약하고 싶도록 작성
+      - 출발일: ${date}
+
+      [작성 규칙]
+      - 여행 기간에 맞게 날짜별 주요 일정 형태로 작성
+      - 예: 1일차, 2일차, 3일차 형태로 구분
+      - 각 날짜에는 주요 관광지 또는 활동을 간단히 설명
+      - 전체 글자수는 300자 이내
+      - 고객이 예약하고 싶어지도록 매력적으로 작성
       - 출처, 링크, 참고문헌은 포함하지 말 것
-      - 상품명, 가격, 출발일 앞 뒤로 ** 표시 하지 말 것
+      - 상품명, 가격, 출발일 앞뒤에 ** 표시하지 말 것
+      - 카테고리 중심으로 상세 설명이 생성되도록 할 것
+
+      [출력 형식 예시]
+      1일차: 공항 도착 후 제주 동부 관광과 해변 산책  
+      2일차: 한라산 전망 명소와 오름 트레킹, 제주 전통시장 방문  
+      3일차: 서귀포 자연 명소 관광과 자유 일정  
+      4일차: 기념품 쇼핑 후 공항 이동
       `;
 
     try {
@@ -303,7 +323,6 @@ const New = () => {
               type="number"
               min="1"
               className="admin-desc"
-              value={price}
               onChange={(e) => setPrice(Number(e.target.value))}
             />
             {errors.price && <p className="error">{errors.price}</p>}
@@ -328,6 +347,7 @@ const New = () => {
             <button
               type="button"
               className="ai-badge admin-desc"
+              title="상품명, 상품가격, 출발일을 지정하여 상세 설명을 생성합니다."
               onClick={(e) => {
                 e.stopPropagation();
                 void handleGenerateDesc();
@@ -358,7 +378,6 @@ const New = () => {
             type="number"
             min="1"
             className="admin-desc"
-            value={stock}
             onChange={(e) => setStock(Number(e.target.value))}
           />
           {errors.stock && <p className="error">{errors.stock}</p>}

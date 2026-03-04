@@ -1,9 +1,8 @@
 .admin-dashboard {
   text-align: center;
   width: 100%;
-  max-width: 375px;
   height: 100%;
-  background:#F2F2F7;
+  background:#eef4ff;
 
   .admin-title {
     padding: 2rem 24px 0 24px;
@@ -23,6 +22,8 @@
   }
 
   .admin-menu {
+    max-width: 375px;
+    margin: 0 auto;
     padding: 0 24px 0 24px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);

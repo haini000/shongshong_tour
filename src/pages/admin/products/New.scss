@@ -1,9 +1,7 @@
 ﻿.product-create {
   width: 100%;
-  max-width: 375px;
   height: 100%;
-  margin: 0 auto;
-  background: #F2F2F7;
+  background: #eef4ff;
   margin-bottom: 1.5rem;
 
   .title {
@@ -11,6 +9,8 @@
   }
 
   form {
+    max-width: 375px;
+    margin: 0 auto;
     padding: 0 24px 0 24px;
   }
 
@@ -133,6 +133,8 @@
   }
 
   .page-header {
+    max-width: 375px;
+    margin: 0 auto;
     padding: 24px;
     display: flex;
     align-items: center;
