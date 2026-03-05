@@ -67,6 +67,7 @@ Tools
 
 ## 3. 라우트 구조
 | 경로 | 설명 | 접근 권한 |
+| --- | --- | --- |
 | / | 메인 | 전체 |
 | /login | 로그인 | 전체 |
 | /join | 회원가입 | 전체 |
@@ -78,6 +79,13 @@ Tools
 
 ## 4. 시스템 구조
 
-User → React (Vite) → Supabase (Auth, DB, Storage)
-                        ↓
-                      OpenAI API (AI 상품 설명 생성)
+User
+
+>↓
+>React (Vite)
+
+>>↓
+>>Supabase (Auth, DB, Storage)
+
+>>>↓
+>>>OpenAI API (AI 상품 설명 생성)
