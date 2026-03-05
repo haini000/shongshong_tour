@@ -7,7 +7,7 @@ import './Checkout.scss';
 export default function Checkout() {
   const navigate = useNavigate();
   const [cartTotal, setCartTotal] = useState(0); // 1. 장바구니 합계 상태
-  const [discount, setDiscount] = useState(0);   // 2. 할인 금액 상태
+  const [discount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const clientKey = 'test_ck_GePWvyJnrKJqoleKgWLbVgLzN97E'; 
