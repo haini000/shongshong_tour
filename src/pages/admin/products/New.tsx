@@ -3,7 +3,7 @@
 * 담당자: 김두현
 * 역할: 관리자 상품 등록 및 UI 구현
 * 생성일: 2026-02-19
-* 최종 수정일: 2026-03-04
+* 최종 수정일: 2026-03-05
 */
 
 import { useEffect, useState } from "react";
@@ -16,6 +16,22 @@ import "./New.scss";
 
 const API_BASE = "/api/v1";
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+
+const escapeHtml = (value: string) =>
+  value.replace(/[&<>"'`]/g, (char) => {
+    const entities: Record<string, string> = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+      "`": "&#96;",
+    };
+    return entities[char] ?? char;
+  });
+
+const sanitizePlainText = (value: string) => escapeHtml(value).trim();
 
 const New = () => {
   const navigate = useNavigate();
@@ -107,6 +123,8 @@ const New = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
+    const safeName = sanitizePlainText(name);
+    const safeDesc = sanitizePlainText(desc);
 
     let imageUrl = "";
 
@@ -133,9 +151,9 @@ const New = () => {
       .from("Product")
       .insert([
         {
-          product_name: name,
+          product_name: safeName,
           product_price: price,
-          product_desc: desc,
+          product_desc: safeDesc,
           product_stock: stock,
           travel_date: date,
           product_image: imageUrl,
@@ -242,7 +260,7 @@ const New = () => {
 
       const data = await response.json();
 
-      setDesc(data.content);
+      setDesc(sanitizePlainText(String(data.content ?? "")));
 
     } catch (error) {
       console.error(error);
@@ -285,6 +303,31 @@ const New = () => {
               onChange={(e) => {
                 if (e.target.files) {
                   const file = e.target.files[0];
+                  if (!file) return;
+
+                  const isAllowedType =
+                    file.type === "image/png" || file.type === "image/jpeg";
+                  if (!isAllowedType) {
+                    setImage(null);
+                    setPreview(null);
+                    setErrors((prev) => ({
+                      ...prev,
+                      image: "PNG, JPG 파일만 업로드 가능합니다.",
+                    }));
+                    return;
+                  }
+
+                  if (file.size > MAX_IMAGE_SIZE) {
+                    setImage(null);
+                    setPreview(null);
+                    setErrors((prev) => ({
+                      ...prev,
+                      image: "이미지 용량은 10MB 이하만 가능합니다.",
+                    }));
+                    return;
+                  }
+
+                  setErrors((prev) => ({ ...prev, image: "" }));
                   setImage(file);
                   setPreview(URL.createObjectURL(file));
                 }
