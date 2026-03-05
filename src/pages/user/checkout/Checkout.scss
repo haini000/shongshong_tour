@@ -1,10 +1,10 @@
+@use "sass:color";
 @use '/src/components/common.scss' as *;
 
 .checkout-container {
   width: 100%;
   max-width: 430px;
   margin: 0 auto;
-  min-height: 100vh;
   background-color: $white;
   font-family: $font-admin;
   display: flex;
@@ -48,7 +48,7 @@
       @extend .admin-desc;
 
       &.discount {
-        color: darken($primary-500, 10%);
+        color: color.adjust($primary-500, $lightness: -10%);
         margin-bottom: 24px;
       }
     }
@@ -68,7 +68,7 @@
       .price {
         font-size: $font-24;
         font-weight: 900;
-        color: darken($primary-500, 15%);
+        color: color.adjust($primary-500, $lightness: -15%);
       }
     }
   }
