@@ -10,17 +10,28 @@ export default function Cart() {
 
   const fetchCart = async () => {
     setLoading(true);
+
+    // getSesstion or getUser
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
     const { data, error } = await supabase
       .from('Cart') 
       .select(`
         cart_id,
+        product_number,
         Product (
           product_name,
           product_price,
           product_image,
           travel_date
         )
-      `);
+      `)
+      .eq(`user_id`, user.id);
     
     if (error) console.error(error);
     else setCartItems(data || []);
@@ -121,7 +132,7 @@ export default function Cart() {
             </div>
             <div style={{ display: 'flex', gap: '12px' }}>
               <button onClick={clearCart} style={{ flex: 1, padding: '16px', borderRadius: '16px', border: 'none', backgroundColor: '#f1f5f9', color: '#64748b', fontWeight: '700', cursor: 'pointer' }}>비우기</button>
-              <button style={{ flex: 1.8, padding: '16px', borderRadius: '16px', border: 'none', backgroundColor: '#4285f4', color: 'white', fontWeight: '700', cursor: 'pointer' }}>주문하기</button>
+              <button onClick={() => navigate('/checkout')} style={{ flex: 1.8, padding: '16px', borderRadius: '16px', border: 'none', backgroundColor: '#4285f4', color: 'white', fontWeight: '700', cursor: 'pointer' }}>주문하기</button>
             </div>
           </div>
 
