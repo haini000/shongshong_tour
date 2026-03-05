@@ -11,7 +11,7 @@ export default function Checkout() {
   const [discount] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const clientKey = 'test_ck_GePWvyJnrKJqoleKgWLbVgLzN97E'; 
+  const clientKey = import.meta.env.VITE_TOSS_CLIENT_KEY;
 
   // 데이터 로드: 장바구니 합계 계산
   useEffect(() => {
