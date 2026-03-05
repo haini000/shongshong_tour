@@ -20,7 +20,7 @@
 ### 1-2. 팀원
 | 이름 | 역할 | 주요 담당 | 연락 |
 | --- | --- | --- | --- |
-| 신찬섭 | 팀장 | 디자인, ERD, 메인페이지, 결제페이지, 로그인/회원가입페이지 구현 | haini000@naver.com |
+| 신찬섭 | 팀장 | 디자인, ERD, 메인페이지, 결제페이지, 로그인/회원가입페이지, 마이페이지 구현 | haini000@naver.com |
 | 김두현 | 팀원 | 디자인, Supabase, Git 병합, 메인페이지, 관리자 페이지 구현 | duhyeon467@gmail.com |
 | 이세나 | 팀원 | 장바구니 페이지 구현 | tpsk1545@gmail.com |
 
@@ -48,7 +48,34 @@
 - 상품 CRUD
 - AI 상세 설명 자동 생성
 
-## 2. 개발 환경
+## 2. 간트차트
+
+```mermaid
+gantt
+    title ShongShong-Tour 3차 프로젝트 일정
+    dateFormat  YYYY-MM-DD
+    axisFormat  %m/%d
+
+    section 기획
+    프로젝트 기획 및 아이디어 정리 :done, plan1, 2026-02-03, 2d
+    요구사항 정의 및 역할 분담 :done, plan2, after plan1, 2d
+
+    section 디자인
+    와이어프레임 설계 :done, design1, 2026-02-07, 3d
+    UI 디자인 (Figma) :done, design2, after design1, 3d
+
+    section 개발
+    프로젝트 초기 세팅 (React + Vite + TS) :done, dev1, 2026-02-13, 2d
+    메인 페이지 개발 :done, dev2, after dev1, 5d
+    관리자 페이지 개발 :active, dev3, after dev2, 6d
+    Supabase 연동 및 기능 구현 :dev4, after dev3, 5d
+
+    section 테스트 및 배포
+    기능 테스트 및 버그 수정 :test1, 2026-03-01, 3d
+    Vercel 배포 및 최종 점검 :test2, after test1, 2d
+```
+
+## 3. 개발 환경
 Frontend
 - Framework : React - 컴포넌트 기반 구조로 재사용성과 유지보수성 확보
 - Language : TypeScript - 정적 타입으로 런타임 오류 최소화
@@ -65,19 +92,20 @@ Tools
 - Deployment : Vercel
 - Version Control : Git & GitHub
 
-## 3. 라우트 구조
+## 4. 라우트 구조
 | 경로 | 설명 | 접근 권한 |
 | --- | --- | --- |
 | / | 메인 | 전체 |
 | /login | 로그인 | 전체 |
 | /join | 회원가입 | 전체 |
+| /mypage | 내 정보 | 개인 |
 | /cart | 장바구니 | 개인 |
 | /checkout | 결제 | 개인 |
 | /admin | 관리자 대시보드 | 관리자 |
 | /admin/products/new | 상품 추가 | 관리자 |
 | /admin/products/:id/edit | 상품 수정 | 관리자 |
 
-## 4. 시스템 구조
+## 5. 시스템 구조
 
 User
 
